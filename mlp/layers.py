@@ -35,16 +35,23 @@ def create_random_mask(mask_shape, share_across_batch=False):
 class Layer(object):
     """Abstract class defining the interface for a layer."""
 
-    def fprop(self, inputs):
+    def _fprop(self, inputs):
+        raise NotImplementedError()
+
+    def fprop(self, inputs, evaluation=False):
         """Forward propagates activations through the layer transformation.
 
         Args:
             inputs: Array of layer inputs of shape (batch_size, input_dim).
+            evaluation: If True uses deterministic forward-propagation
 
         Returns:
             outputs: Array of layer outputs of shape (batch_size, output_dim).
         """
-        raise NotImplementedError()
+        if evaluation:
+            return inputs
+        else:
+            return self._fprop(inputs)
 
     def bprop(self, inputs, outputs, grads_wrt_outputs):
         """Back propagates gradients through a layer.
@@ -124,7 +131,7 @@ class StochasticLayerWithParameters(Layer):
             rng = np.random.RandomState(DEFAULT_SEED)
         self.rng = rng
 
-    def fprop(self, inputs, stochastic=True):
+    def _fprop(self, inputs, stochastic=True):
         """Forward propagates activations through the layer transformation.
 
         Args:
@@ -196,7 +203,7 @@ class StochasticLayer(Layer):
         self.rng = rng
         self.rand_mask = None
 
-    def fprop(self, inputs, stochastic=True):
+    def _fprop(self, inputs, stochastic=True):
         """Forward propagates activations through the layer transformation.
 
         Args:
@@ -277,7 +284,7 @@ class AffineLayer(LayerWithParameters):
         self.weights_penalty = weights_penalty
         self.biases_penalty = biases_penalty
 
-    def fprop(self, inputs):
+    def _fprop(self, inputs):
         """Forward propagates activations through the layer transformation.
 
         For inputs `x`, outputs `y`, weights `W` and biases `b` the layer
@@ -366,7 +373,7 @@ class SigmoidLayer(Layer):
     def __init__(self):
         super().__init__()
 
-    def fprop(self, inputs):
+    def _fprop(self, inputs):
         """Forward propagates activations through the layer transformation.
 
         For inputs `x` and outputs `y` this corresponds to
@@ -405,7 +412,7 @@ class SigmoidLayer(Layer):
 class ReluLayer(Layer):
     """Layer implementing an element-wise rectified linear transformation."""
 
-    def fprop(self, inputs):
+    def _fprop(self, inputs):
         """Forward propagates activations through the layer transformation.
 
         For inputs `x` and outputs `y` this corresponds to `y = max(0, x)`.
@@ -445,7 +452,7 @@ class LeakyReluLayer(Layer):
     def __init__(self, alpha=0.01):
         self.alpha = alpha
 
-    def fprop(self, inputs):
+    def _fprop(self, inputs):
         """Forward propagates activations through the layer transformation.
 
         For inputs `x` and outputs `y` this corresponds to `y = ..., else`.
@@ -476,7 +483,7 @@ class ParametricReluLayer(LayerWithParameters):
         """A list of layer parameter values: `[weights, biases]`."""
         return [self.alpha]
 
-    def fprop(self, inputs):
+    def _fprop(self, inputs):
         """Forward propagates activations through the layer transformation.
 
         For inputs `x` and outputs `y` this corresponds to `y = ..., else`.
@@ -528,7 +535,7 @@ class ParametricReluLayer(LayerWithParameters):
 class TanhLayer(Layer):
     """Layer implementing an element-wise hyperbolic tangent transformation."""
 
-    def fprop(self, inputs):
+    def _fprop(self, inputs):
         """Forward propagates activations through the layer transformation.
 
         For inputs `x` and outputs `y` this corresponds to `y = tanh(x)`.
@@ -566,7 +573,7 @@ class TanhLayer(Layer):
 class SoftmaxLayer(Layer):
     """Layer implementing a softmax transformation."""
 
-    def fprop(self, inputs):
+    def _fprop(self, inputs):
         """Forward propagates activations through the layer transformation.
 
         For inputs `x` and outputs `y` this corresponds to
@@ -614,7 +621,7 @@ class CustomActivationLayer(Layer):
     def __init__(self):
         super().__init__()
 
-    def fprop(self, inputs):
+    def _fprop(self, inputs):
         """Forward propagates activations through the layer transformation.
         Args:
             inputs: Array of layer inputs of shape (batch_size, input_dim).
@@ -668,7 +675,7 @@ class RadialBasisFunctionLayer(Layer):
         self.scales = np.array([
             [(high - low) * 1. / grid_dim] for (low, high) in intervals])
 
-    def fprop(self, inputs):
+    def _fprop(self, inputs):
         """Forward propagates activations through the layer transformation.
 
         Args:
@@ -726,7 +733,7 @@ class DropoutLayer(StochasticLayer):
         self.rng = rng
         self.rand_mask = None
 
-    def fprop(self, inputs, stochastic=True):
+    def _fprop(self, inputs, stochastic=True):
         """Forward propagates activations through the layer transformation.
 
         Args:
@@ -814,7 +821,7 @@ class ReshapeLayer(Layer):
         """
         self.output_shape = (-1,) if output_shape is None else output_shape
 
-    def fprop(self, inputs):
+    def _fprop(self, inputs):
         """Forward propagates activations through the layer transformation.
 
         Args:
