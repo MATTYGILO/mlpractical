@@ -27,11 +27,12 @@ class SingleLayerModel(object):
         """A list of all of the parameters of the model."""
         return self.layer.params
 
-    def fprop(self, inputs):
+    def fprop(self, inputs, evaluation=False):
         """Calculate the model outputs corresponding to a batch of inputs.
 
         Args:
             inputs: Batch of inputs to the model.
+            evaluation: Boolean flag indicating whether to evaluate the model
 
         Returns:
             List which is a concatenation of the model inputs and model
@@ -40,7 +41,7 @@ class SingleLayerModel(object):
             activations through all immediate layers of the model and including
             the inputs and outputs.
         """
-        activations = [inputs, self.layer.fprop(inputs)]
+        activations = [inputs, self.layer.fprop(inputs, evaluation=evaluation)]
         return activations
 
     def grads_wrt_params(self, activations, grads_wrt_outputs):
