@@ -1,0 +1,31 @@
+
+
+I have had experience with AI before in the past, so conceptually the different layers were not new to me.
+I understood the majority of the layer's forward prop before starting this course.
+However, calculating the individual backprop for each is new, since this is usually abstracted within frameworks
+like tensorflow and pytorch.
+
+Something also that was new for me was the share_across_batch for dropout.
+Usually in most libraries this is not an option and instead each data point in a batch has a different dropout.
+I was debating using tiling, however I realised that I could simply modify the shape for matmul. Which is more efficient
+and save memory.
+
+I also had to decide whether to throw an error or not for the dropout in the case where there had been no forward pass
+and as such no random mask. I decided to reduce risk of errors, so instead we have a default value for rand_mask,
+which is simply the assumption that all that get's passed through.
+
+Something I learnt that was new to me was that in the forward pass for dropout we actually scale the activations by 1/(1-dropout_rate)
+
+
+For debugging during development, I implemented some global env variables for verbose logging.
+
+I found implementing the L1 and L2 penalties relatively easy from the formulas online.
+I then check them using the provided tests, which were incredibly useful.
+
+I realised that both stochastic layer and relu use the same functionality for generating random masks.
+The only difference is that DropoutOut converts it to a binary mask using a threshold.
+
+
+I had never heard of a ParametricReluLayer before, but now I realise that it is basically a LeakyRelu where alpha is learnable.
+
+I initially thought that I had to use
