@@ -29,3 +29,18 @@ The only difference is that DropoutOut converts it to a binary mask using a thre
 I had never heard of a ParametricReluLayer before, but now I realise that it is basically a LeakyRelu where alpha is learnable.
 
 I initially thought that I had to use
+
+Initially found the implementing of ParametricReluLayer confusing.
+The calculations to find the gradient with respect to alpha was fine.
+I wasn't sure first why we needed the sum, in comparison to gradient wrt inputs.
+However, I realised that this needs to be a constant for the loss.
+
+
+Whilst doing lab 2, I came across the problem where the default layer did not have evaluation parameter implemented.
+So I added this. For evaluation the forward prop is simply propagating the input without any change.
+The problem is, this will likely mean I need an if statement within all of my layers and I don't particuarly want to do that.
+
+Instead perhaps what if we modified all the layer's backprop functions to be the name of some other method,
+then we can choose whether to run the child's implementation or not.
+
+To do this I have added an extra _fprop method to Layer, which all subsequent layers will then implement.
