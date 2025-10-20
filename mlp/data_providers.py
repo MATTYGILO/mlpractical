@@ -259,8 +259,6 @@ class EMNISTDataProvider(DataProvider):
             targets_batch_mat = self.to_one_of_k(targets_batch)
         return inputs_batch, targets_batch_mat
         
-
-
     def to_one_of_k(self, int_targets):
         """Converts integer coded class target to 1 of K coded targets.
 
@@ -295,9 +293,15 @@ class EMNISTDataProvider(DataProvider):
         (num_data, num_classes)
 
         """
-        
-        raise NotImplementedError
-  
+
+        # Get the one hot encoding
+        one_hot = self.to_one_of_k(int_targets)
+
+        # Apply label smoothing
+        smoothed_one_hot = (1 - alpha) * one_hot + (alpha / self.num_classes)
+
+        return smoothed_targets
+
     
 
 class MetOfficeDataProvider(DataProvider):
