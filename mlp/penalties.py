@@ -1,7 +1,9 @@
 import numpy as np
+import os
 
 seed = 22102017
 rng = np.random.RandomState(seed)
+PENALTY_VERBOSE = int(os.environ.get("PENALTY_VERBOSE", "0")) == 1
 
 
 class L1Penalty(object):
@@ -29,6 +31,9 @@ class L1Penalty(object):
         Returns:
             Value of penalty term.
         """
+
+        # L1 is simply the sum of the parameterL
+
         raise NotImplementedError
 
     def grad(self, parameter):

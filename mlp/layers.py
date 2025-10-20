@@ -14,6 +14,10 @@ respect to the layer parameters.
 import os
 
 import numpy as np
+import os
+
+# Global verbosity flag for layers
+LAYER_VERBOSE = int(os.environ.get("LAYER_VERBOSE", "0")) == 1
 import mlp.initialisers as init
 from mlp import DEFAULT_SEED
 
@@ -689,8 +693,6 @@ class DropoutLayer(StochasticLayer):
         self.rng = rng
         self.rand_mask = None
 
-        self.layer_verbose = os.environ["LAYER_VERBOSE"] == "1"
-
     def fprop(self, inputs, stochastic=True):
         """Forward propagates activations through the layer transformation.
 
@@ -717,7 +719,7 @@ class DropoutLayer(StochasticLayer):
         # Get a random array with the shape of inputs
         self.rand_mask = (np.random.rand(*mask_shape) < self.incl_prob) / self.incl_prob
 
-        if self.layer_verbose:
+        if LAYER_VERBOSE:
             print("self.rand_mask.shape:", self.rand_mask.shape)
             print("inputs.shape:", inputs.shape)
 
@@ -752,7 +754,7 @@ class DropoutLayer(StochasticLayer):
         else:
             rand_mask = self.rand_mask
 
-        if self.layer_verbose:
+        if LAYER_VERBOSE:
             print("rank_mask.shape:", rand_mask.shape)
             print("grads_wrt_outputs.shape:", grads_wrt_outputs.shape)
 
