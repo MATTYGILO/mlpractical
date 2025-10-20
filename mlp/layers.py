@@ -21,6 +21,17 @@ LAYER_VERBOSE = int(os.environ.get("LAYER_VERBOSE", "0")) == 1
 import mlp.initialisers as init
 from mlp import DEFAULT_SEED
 
+
+def create_random_mask(mask_shape, share_across_batch=False):
+
+    # The shape of the mask should be the same across the batch
+    if share_across_batch:
+        mask_shape = (1, *mask_shape[1:])
+
+    # Get a random array with the shape of inputs
+    return np.random.rand(*mask_shape)
+
+
 class Layer(object):
     """Abstract class defining the interface for a layer."""
 
@@ -183,6 +194,7 @@ class StochasticLayer(Layer):
         if rng is None:
             rng = np.random.RandomState(DEFAULT_SEED)
         self.rng = rng
+        self.rand_mask = None
 
     def fprop(self, inputs, stochastic=True):
         """Forward propagates activations through the layer transformation.
@@ -199,7 +211,14 @@ class StochasticLayer(Layer):
         Returns:
             outputs: Array of layer outputs of shape (batch_size, output_dim).
         """
-        raise NotImplementedError()
+
+        if not stochastic:
+            return inputs
+
+        # Set the random mask
+        self.rand_mask = create_random_mask(inputs.shape)
+
+        return inputs * self.rand_mask
 
     def bprop(self, inputs, outputs, grads_wrt_outputs):
         """Back propagates gradients through a layer.
@@ -219,7 +238,14 @@ class StochasticLayer(Layer):
             Array of gradients with respect to the layer inputs of shape
             (batch_size, input_dim).
         """
-        raise NotImplementedError()
+
+        if self.rand_mask is None:
+            rand_mask = np.ones_like(inputs)
+        else:
+            rand_mask = self.rand_mask
+
+        return grads_wrt_outputs * rand_mask
+
 
 
 class AffineLayer(LayerWithParameters):
@@ -709,25 +735,20 @@ class DropoutLayer(StochasticLayer):
             outputs: Array of layer outputs of shape (batch_size, output_dim).
         """
 
-        # Get the shape of the inputs
-        mask_shape = inputs.shape
+        if not stochastic:
+            return inputs
 
-        # The shape of the random
-        if self.share_across_batch:
-            mask_shape = (1, *mask_shape[1:])
+        # Generate the random mask
+        rand_mask = create_random_mask(inputs.shape, share_across_batch=self.share_across_batch)
 
         # Get a random array with the shape of inputs
-        self.rand_mask = (np.random.rand(*mask_shape) < self.incl_prob) / self.incl_prob
+        self.rand_mask = (rand_mask < self.incl_prob) / self.incl_prob
 
         if LAYER_VERBOSE:
             print("self.rand_mask.shape:", self.rand_mask.shape)
             print("inputs.shape:", inputs.shape)
 
-        # Mat mul the input
-        if stochastic:
-            return inputs * self.rand_mask
-        else:
-            return inputs
+        return inputs * self.rand_mask
 
     def bprop(self, inputs, outputs, grads_wrt_outputs):
         """Back propagates gradients through a layer.
