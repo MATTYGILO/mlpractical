@@ -11,6 +11,7 @@ Some layers will have learnable parameters and so will additionally define
 methods for getting and setting parameter and calculating gradients with
 respect to the layer parameters.
 """
+import os
 
 import numpy as np
 import mlp.initialisers as init
@@ -419,8 +420,7 @@ class LeakyReluLayer(Layer):
 
         For inputs `x` and outputs `y` this corresponds to `y = ..., else`.
         """
-
-        raise NotImplementedError
+        return np.where(inputs > 0, inputs, self.alpha * inputs)
 
     def bprop(self, inputs, outputs, grads_wrt_outputs):
         """Back propagates gradients through a layer.
@@ -428,7 +428,7 @@ class LeakyReluLayer(Layer):
         Given gradients with respect to the outputs of the layer calculates the
         gradients with respect to the layer inputs.
         """
-        raise NotImplementedError
+        return np.where(inputs > 0, 1, self.alpha) * grads_wrt_outputs
 
     def __repr__(self):
         return 'LeakyReluLayer'
@@ -687,6 +687,9 @@ class DropoutLayer(StochasticLayer):
         self.incl_prob = incl_prob
         self.share_across_batch = share_across_batch
         self.rng = rng
+        self.rand_mask = None
+
+        self.layer_verbose = os.environ["LAYER_VERBOSE"] == "1"
 
     def fprop(self, inputs, stochastic=True):
         """Forward propagates activations through the layer transformation.
@@ -703,7 +706,26 @@ class DropoutLayer(StochasticLayer):
         Returns:
             outputs: Array of layer outputs of shape (batch_size, output_dim).
         """
-        raise NotImplementedError
+
+        # Get the shape of the inputs
+        mask_shape = inputs.shape
+
+        # The shape of the random
+        if self.share_across_batch:
+            mask_shape = (1, *mask_shape[1:])
+
+        # Get a random array with the shape of inputs
+        self.rand_mask = (np.random.rand(*mask_shape) < self.incl_prob) / self.incl_prob
+
+        if self.layer_verbose:
+            print("self.rand_mask.shape:", self.rand_mask.shape)
+            print("inputs.shape:", inputs.shape)
+
+        # Mat mul the input
+        if stochastic:
+            return inputs * self.rand_mask
+        else:
+            return inputs
 
     def bprop(self, inputs, outputs, grads_wrt_outputs):
         """Back propagates gradients through a layer.
@@ -723,7 +745,19 @@ class DropoutLayer(StochasticLayer):
             Array of gradients with respect to the layer inputs of shape
             (batch_size, input_dim).
         """
-        raise NotImplementedError
+
+        # If the random mask is null default to ones as the mask
+        if self.rand_mask is None:
+            rand_mask = np.ones_like(inputs)
+        else:
+            rand_mask = self.rand_mask
+
+        if self.layer_verbose:
+            print("rank_mask.shape:", rand_mask.shape)
+            print("grads_wrt_outputs.shape:", grads_wrt_outputs.shape)
+
+        return grads_wrt_outputs * rand_mask
+
 
     def __repr__(self):
         return 'DropoutLayer(incl_prob={0:.1f})'.format(self.incl_prob)
