@@ -481,7 +481,7 @@ class ParametricReluLayer(LayerWithParameters):
 
         For inputs `x` and outputs `y` this corresponds to `y = ..., else`.
         """
-        raise NotImplementedError
+        return np.where(inputs > 0, inputs, self.alpha * inputs)
 
     def bprop(self, inputs, outputs, grads_wrt_outputs):
         """Back propagates gradients through a layer.
@@ -489,7 +489,7 @@ class ParametricReluLayer(LayerWithParameters):
         Given gradients with respect to the outputs of the layer calculates the
         gradients with respect to the layer inputs.
         """
-        raise NotImplementedError
+        return np.where(inputs > 0, 1.0, self.alpha) * grads_wrt_outputs
 
     def grads_wrt_params(self, inputs, grads_wrt_outputs):
         """Calculates gradients with respect to layer parameters.
@@ -503,7 +503,14 @@ class ParametricReluLayer(LayerWithParameters):
             list of arrays of gradients with respect to the layer parameters
             `[grads_wrt_params]`. Where params is the alpha parameter.
         """
-        raise NotImplementedError
+
+        # Get the gradient with respect to alpha
+        grad_wrt_alpha = np.where(inputs > 0, 0.0, inputs)
+
+        # Get the sum over the batch
+        grad_wrt_alpha = np.sum(grad_wrt_alpha * grads_wrt_outputs)
+
+        return [grad_wrt_alpha]
 
     @property
     def params(self):
