@@ -60,12 +60,15 @@ However, it is also known that increasing a network's width beyond a certain poi
 %% Question 5:
 \newcommand{\questionFive} {
 \youranswer{
-From the data we can see that as the depth of the network increases the rate at which the error decreases slows down.
-Additionally,as for depths 2 and 3 and the accuracy is seriously hampered it hits a limit and seemingly remains there.
-Whereas, for a single depth network the
-
-The networking is consistently
-
+for the depths tested, increasing the network’s depth does not consistently improve performance.
+Shallower networks achieve lower training and validation errors and higher accuracies,
+while the deepest network performs worse and shows minimal improvement with training.
+This indicates that increasing depth makes optimisation more difficult.
+This behaviour is likely caused by the custom activation function used, ( 1 / (10 \times (1 + e^{-x})) ),
+which heavily compresses output values and causes vanishing gradients across layers.
+As seen in training for all depths, the average gradient flow drops off significiantly from the final layer.
+When repeating the experiment with ReLU, the gradients do not vanish and all depths achieve similarly high accuracy,
+supporting the conclusion that the custom activation function is causing vanishing gradients.
 }
 %    Question 5 - Discuss whether varying depth affects the results in a consistent way, and whether the results are expected and match well with the prior knowledge (by which we mean your expectations as are formed from the relevant Theory and literature)}
 }
