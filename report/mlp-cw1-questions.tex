@@ -36,23 +36,38 @@ Overall, this pattern clearly shows that the model is overfitting. The turning p
 
 %% Question 2:
 \newcommand{\questionTwo} {
-\youranswer{Question 2 - Present your network width experiment results by using the relevant figure and table}
+\youranswer{
 }
-
+%    Question 2 - Present your network width experiment results by using the relevant figure and table}
+}
 
 %% Question 3:
 \newcommand{\questionThree} {
-\youranswer{Question 3 - Discuss whether varying width affects the results in a consistent way, and whether the results are expected and match well with the prior knowledge (by which we mean your expectations as are formed from the relevant Theory and literature)}
+\youranswer{for the widths tested, increasing the network's width consistently improves validation accuracy and reduces
+both training and validation errors. This suggests that wider networks improve overall performance.
+This behaviour is typical up to a point, as wider networks have greater capacity to model complex patterns.
+However, it is also known that increasing a network's width beyond a certain point, results in either overfitting or reduce performance gains.
+%    Question 3 - Discuss whether varying width affects the results in a consistent way, and whether the results are expected and match well with the prior knowledge (by which we mean your expectations as are formed from the relevant Theory and literature)}
+}
 }
 
 %% Question 4:
 \newcommand{\questionFour} {
-\youranswer{Question 4 - Present your network depth experiment results by using the relevant figure and table}
+\youranswer{}
+%    Question 4 - Present your network depth experiment results by using the relevant figure and table}
 }
 
 %% Question 5:
 \newcommand{\questionFive} {
-\youranswer{Question 5 - Discuss whether varying depth affects the results in a consistent way, and whether the results are expected and match well with the prior knowledge (by which we mean your expectations as are formed from the relevant Theory and literature)}
+\youranswer{
+From the data we can see that as the depth of the network increases the rate at which the error decreases slows down.
+Additionally,as for depths 2 and 3 and the accuracy is seriously hampered it hits a limit and seemingly remains there.
+Whereas, for a single depth network the
+
+The networking is consistently
+
+}
+%    Question 5 - Discuss whether varying depth affects the results in a consistent way, and whether the results are expected and match well with the prior knowledge (by which we mean your expectations as are formed from the relevant Theory and literature)}
 }
 
 
@@ -97,18 +112,17 @@ Overall, this pattern clearly shows that the model is overfitting. The turning p
 
 %% Question Figure 2:
 \newcommand{\questionFigureTwo} {
-\youranswer{Question Figure 2 - Replace the images in Figure 2 with figures depicting the accuracy and error, training and validation curves for your experiments varying the number of hidden units.
-%
+\youranswer{See figures above%    Question Figure 2 - Replace the images in Figure 2 with figures depicting the accuracy and error, training and validation curves for your experiments varying the number of hidden units.
 \begin{figure}[t]
     \centering
     \begin{subfigure}{\linewidth}
-        \includegraphics[width=\linewidth]{figures/empty_acc_curve_width.png}
+        \includegraphics[width=\linewidth]{figures/acc_curve_width.png}
         \caption{accuracy by epoch}
         \label{fig:width_acccurves}
     \end{subfigure} 
     \begin{subfigure}{\linewidth}
         \centering
-        \includegraphics[width=\linewidth]{figures/empty_error_curve_width.png}
+        \includegraphics[width=\linewidth]{figures/error_curve_width_relu}
         \caption{error by epoch}
         \label{fig:width_errorcurves}
     \end{subfigure} 
@@ -120,25 +134,25 @@ Overall, this pattern clearly shows that the model is overfitting. The turning p
 
 %% Question Figure 3:
 \newcommand{\questionFigureThree} {
-\youranswer{Question Figure 3 - Replace these images with figures depicting the accuracy and error, training and validation curves for your experiments varying the number of hidden layers.
+\youranswer{}
+%    Question Figure 3 - Replace these images with figures depicting the accuracy and error, training and validation curves for your experiments varying the number of hidden layers.
 %
 \begin{figure}[t]
     \centering
     \begin{subfigure}{\linewidth}
-        \includegraphics[width=\linewidth]{figures/empty_acc_curve_depth.png}
+        \includegraphics[width=\linewidth]{figures/acc_curve_depth.png}
         \caption{accuracy by epoch}
         \label{fig:depth_acccurves}
     \end{subfigure} 
     \begin{subfigure}{\linewidth}
         \centering
-        \includegraphics[width=\linewidth]{figures/empty_error_curve_depth.png}
+        \includegraphics[width=\linewidth]{figures/error_curve_depth_relu}
         \caption{error by epoch}
         \label{fig:depth_errorcurves}
     \end{subfigure} 
     \caption{Training and validation curves in terms of classification accuracy (a) and cross-entropy error (b) on the EMNIST dataset for different network depths.}
     \label{fig:depth}
 \end{figure} 
-}
 }
 
 %% Question Figure 4:
@@ -181,17 +195,15 @@ Overall, this pattern clearly shows that the model is overfitting. The turning p
 %% Question Table 1:
 \newcommand{\questionTableOne} {
 \youranswer{
-Question Table 1 - Fill in Table 1 with the results from your experiments varying the number of hidden units.
-%
 \begin{table}[t]
     \centering
     \begin{tabular}{c|ccc}
     \toprule
         \# Hidden Units & Val. Acc. & Train Error & Val. Error\\
     \midrule
-         32            &    --.-   &  -.--- &   -.---            \\
-         64            &    --.-   &  -.---  &   -.---               \\
-         128           &    --.-   &  -.---  &   -.---           \\ 
+    32 & 0.751 & 0.788 & 0.819 \\
+    64 & 0.799 & 0.579 & 0.637 \\
+    128 & 0.830 & 0.420 & 0.522 \\
     \bottomrule
     \end{tabular}
     \caption{Validation accuracy (\%) and training/validation error (in terms of cross-entropy error) for varying network widths on the EMNIST dataset.}
@@ -203,7 +215,7 @@ Question Table 1 - Fill in Table 1 with the results from your experiments varyin
 %% Question Table 2:
 \newcommand{\questionTableTwo} {
 \youranswer{
-Question Table 2 - Fill in Table 2 with the results from your experiments varying the number of hidden layers.
+%Question Table 2 - Fill in Table 2 with the results from your experiments varying the number of hidden layers.
 %
 \begin{table}[t]
     \centering
@@ -211,9 +223,9 @@ Question Table 2 - Fill in Table 2 with the results from your experiments varyin
     \toprule
         \# Hidden Layers & Val. Acc. & Train Error & Val. Error \\
     \midrule
-         1               &      --.-      &   -.--- & -.---                \\
-         2               &      --.-      &   -.--- & -.---                \\
-         3               &      --.-      &   -.--- & -.---                \\ 
+    1           &   0.058   &  3.623 &   3.625   \\
+    2           &   0.044   &  3.690 &   3.689   \\
+    3           &   0.022   &  3.850 &   3.851   \\
     \bottomrule
     \end{tabular}
     \caption{Validation accuracy (\%) and training/validation error (in terms of cross-entropy error) for varying network depths on the EMNIST dataset.}
