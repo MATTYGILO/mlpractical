@@ -1,5 +1,5 @@
 %% REPLACE SXXXXXX with your student number
-\def\studentNumber{SXXXXXX}
+\def\studentNumber{S2149988}
 
 
 %% START of YOUR ANSWERS
@@ -26,13 +26,19 @@
 
 %% Question 1:
 \newcommand{\questionOne} {
-\youranswer{Question 1 - Explain what these figures contain and how the curves evolve, and spot where overfitting occurs. Reason based on the min/max points and velocities (direction and magnitude of change) of the accuracy and error curves}
+\youranswer{
+The figures show how the loss and accuracy of the neural network change over epochs during training and validation. The validation set contains data points the network has not seen before, which helps us measure how well the model generalises. By comparing training and validation results, we can tell whether the model is underfitting or overfitting.
+Figure (a) shows that the training accuracy increases steadily and then plateaus. The validation accuracy also increases at first, then flattens out and slowly starts to decrease.
+Figure (b) shows that the training error decreases consistently throughout the epochs, which is expected. However, the validation error drops during the early epochs and then begins to rise steadily afterwards.
+Overall, this pattern clearly shows that the model is overfitting. The turning point happens around epoch 10–15, where the validation accuracy reaches its maximum and the validation error reaches its minimum. After this point, the training curves continue to improve while the validation curves move in the opposite direction, showing that the model is learning the training data too specifically and losing generalisation.
+}
 }
 
 %% Question 2:
 \newcommand{\questionTwo} {
 \youranswer{Question 2 - Present your network width experiment results by using the relevant figure and table}
 }
+
 
 %% Question 3:
 \newcommand{\questionThree} {
