@@ -36,9 +36,7 @@ Overall, this pattern clearly shows that the model is overfitting. The turning p
 
 %% Question 2:
 \newcommand{\questionTwo} {
-\youranswer{
-}
-Question 2, answer
+\youranswer{ }
 %    Question 2 - Present your network width experiment results by using the relevant figure and table}
 }
 
@@ -54,9 +52,7 @@ However, it is also known that increasing a network's width beyond a certain poi
 
 %% Question 4:
 \newcommand{\questionFour} {
-\youranswer{
-Question 4, answer
-}
+\youranswer{ }
 %    Question 4 - Present your network depth experiment results by using the relevant figure and table}
 }
 
@@ -79,7 +75,24 @@ supporting the conclusion that the custom activation function is causing vanishi
 
 %% Question 6:
 \newcommand{\questionSix} {
-\youranswer{Question 6 - Explain how one could use a combination of L1 and L2 regularisation. Discuss any potential benefits of this approach. Present an equation for this combined loss function and explain all relevant variables and hyperparameters.}
+\youranswer{
+
+    Question 6 - Explain how one could use a combination of L1 and L2 regularisation. Discuss any potential benefits of this approach. Present an equation for this combined loss function and explain all relevant variables and hyperparameters.}
+
+    L1 regularisation adds a term which is the scaled sum of the given weights.
+    As such, during back propagation, the optimiser will try to decrease the general loss whilst
+    ensuring that the overal size of the weights are minimised. This can have the effect of increasing sparsity,
+    as the optimiser will learn to put the majority of the strength of the weights in the most essential connections.
+
+    L2 regularisation adds a term which is a scaled sum of the squares of the weights,
+    this leads to larger weights being accentuated more than smaller weights. As such the optimiser will incentived
+    to reduce the larger weights more than the smaller weights.
+    This can improve generalisation as probabilties can be distributed more evenly across the different weights.
+
+    L1 and L2 can be used together to provide a balance between increasing sparsity and increasing spread amognst the weights.
+    By weighting their parameters differently, we can prioritise different regularisation over others.
+
+
 }
 
 
@@ -229,9 +242,9 @@ supporting the conclusion that the custom activation function is causing vanishi
     \toprule
         \# Hidden Layers & Val. Acc. & Train Error & Val. Error \\
     \midrule
-    1           &   0.058   &  3.623 &   3.625   \\
-    2           &   0.044   &  3.690 &   3.689   \\
-    3           &   0.022   &  3.850 &   3.851   \\
+    1           &   0.829   &  0.426 &   0.524   \\
+    2           &   0.832   &  0.406 &   0.505   \\
+    3           &   0.831   &  0.403 &   0.505   \\
     \bottomrule
     \end{tabular}
     \caption{Validation accuracy (\%) and training/validation error (in terms of cross-entropy error) for varying network depths on the EMNIST dataset.}
@@ -255,10 +268,10 @@ Question Table 3 - Fill in Table 3 with the results from your experiments for th
         Baseline &  -                    &               0.837 &       0.241 &  0.533          \\
     \midrule
         \multirow{4}*{Dropout}
-                 & 0.6                   &  80.7                &      0.549 & 0.593     \\
-                 & 0.7 & --.- & -.--- & -.---  \\
-                 & 0.85 & 85.1 &  0.329 &  0.434 \\
-                 & 0.97 & 85.4 &  0.244 & 0.457  \\
+                & 0.6         &   0.611   &  3.253 &   3.258   \\
+                & 0.7         &   0.615   &  3.251 &   3.255   \\
+                & 0.85        &   0.614   &  3.269 &   3.272   \\
+                & 0.97        &   0.594   &  3.261 &   3.266   \\
     \midrule
         \multirow{4}*{L1 penalty}
                  & 5e-4 & 79.5 & 0.642 & 0.658 \\
