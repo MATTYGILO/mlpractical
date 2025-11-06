@@ -38,6 +38,7 @@ Overall, this pattern clearly shows that the model is overfitting. The turning p
 \newcommand{\questionTwo} {
 \youranswer{
 }
+Question 2, answer
 %    Question 2 - Present your network width experiment results by using the relevant figure and table}
 }
 
@@ -53,7 +54,9 @@ However, it is also known that increasing a network's width beyond a certain poi
 
 %% Question 4:
 \newcommand{\questionFour} {
-\youranswer{}
+\youranswer{
+Question 4, answer
+}
 %    Question 4 - Present your network depth experiment results by using the relevant figure and table}
 }
 
@@ -64,7 +67,7 @@ for the depths tested, increasing the network’s depth does not consistently im
 Shallower networks achieve lower training and validation errors and higher accuracies,
 while the deepest network performs worse and shows minimal improvement with training.
 This indicates that increasing depth makes optimisation more difficult.
-This behaviour is likely caused by the custom activation function used, ( 1 / (10 \times (1 + e^{-x})) ),
+This behaviour is likely caused by the custom activation function used, $( 1 / (10 \times (1 + e^{-x})) )$,
 which heavily compresses output values and causes vanishing gradients across layers.
 As seen in training for all depths, the average gradient flow drops off significiantly from the final layer.
 When repeating the experiment with ReLU, the gradients do not vanish and all depths achieve similarly high accuracy,

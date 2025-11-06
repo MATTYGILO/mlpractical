@@ -3,17 +3,20 @@ import os
 import numpy as np
 
 import sys
-# sys.path.append('/path/to/mlpractical')
+sys.path.append('/Users/matthewgiles/PycharmProjects/mlpractical')
+
+
+os.environ['MLP_DATA_DIR'] = '/Users/matthewgiles/PycharmProjects/mlpractical/data'
 
 from mlp.layers import DropoutLayer
 from mlp.penalties import L1Penalty, L2Penalty
 parser = argparse.ArgumentParser(description='Welcome to regularization test script')
 
-parser.add_argument('--student_id', nargs="?", type=str, help='Your student id in the format "Sxxxxxxx"')
+# parser.add_argument('--student_id', nargs="?", type=str, help='Your student id in the format "Sxxxxxxx"')
 
 args = parser.parse_args()
 
-student_id = args.student_id
+student_id = "S2149988"
 
 def fprop_bprop_layer(inputs, dropout_layer, grads_wrt_outputs, weights, params=False):
     if params:

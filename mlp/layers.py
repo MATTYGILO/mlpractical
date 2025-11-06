@@ -15,6 +15,7 @@ import os
 
 import numpy as np
 import os
+import inspect
 
 # Global verbosity flag for layers
 LAYER_VERBOSE = int(os.environ.get("LAYER_VERBOSE", "0")) == 1
@@ -32,13 +33,18 @@ def create_random_mask(mask_shape, share_across_batch=False):
     return np.random.rand(*mask_shape)
 
 
+def has_param(method, name):
+    sig = inspect.signature(method)
+    return name in sig.parameters
+
+
 class Layer(object):
     """Abstract class defining the interface for a layer."""
 
-    def _fprop(self, inputs):
+    def _fprop(self, inputs, **kwargs):
         raise NotImplementedError()
 
-    def fprop(self, inputs, evaluation=False):
+    def fprop(self, inputs, evaluation=False, **kwargs):
         """Forward propagates activations through the layer transformation.
 
         Args:
@@ -48,10 +54,17 @@ class Layer(object):
         Returns:
             outputs: Array of layer outputs of shape (batch_size, output_dim).
         """
+
+        # Check whether the method has an evaluation parameter
+        has_eval_param = has_param(self._fprop, "evaluation")
+
         if evaluation:
-            return inputs
+            if has_eval_param:
+                return self._fprop(inputs, evaluation=evaluation, **kwargs)
+            else:
+                return inputs
         else:
-            return self._fprop(inputs)
+            return self._fprop(inputs, **kwargs)
 
     def bprop(self, inputs, outputs, grads_wrt_outputs):
         """Back propagates gradients through a layer.
@@ -794,7 +807,6 @@ class DropoutLayer(StochasticLayer):
             print("grads_wrt_outputs.shape:", grads_wrt_outputs.shape)
 
         return grads_wrt_outputs * rand_mask
-
 
     def __repr__(self):
         return 'DropoutLayer(incl_prob={0:.1f})'.format(self.incl_prob)
