@@ -12,10 +12,7 @@ methods for getting and setting parameter and calculating gradients with
 respect to the layer parameters.
 """
 import os
-
 import numpy as np
-import os
-import inspect
 
 # Global verbosity flag for layers
 LAYER_VERBOSE = int(os.environ.get("LAYER_VERBOSE", "0")) == 1
@@ -33,16 +30,14 @@ def create_random_mask(mask_shape, share_across_batch=False):
     return np.random.rand(*mask_shape)
 
 
-def has_param(method, name):
-    sig = inspect.signature(method)
-    return name in sig.parameters
-
-
 class Layer(object):
     """Abstract class defining the interface for a layer."""
 
     def _fprop(self, inputs, **kwargs):
         raise NotImplementedError()
+
+    # def _fprop_eval(self, inputs, **kwargs):
+    #     raise NotImplementedError()
 
     def fprop(self, inputs, evaluation=False, **kwargs):
         """Forward propagates activations through the layer transformation.
@@ -55,12 +50,9 @@ class Layer(object):
             outputs: Array of layer outputs of shape (batch_size, output_dim).
         """
 
-        # Check whether the method has an evaluation parameter
-        has_eval_param = has_param(self._fprop, "evaluation")
-
         if evaluation:
-            if has_eval_param:
-                return self._fprop(inputs, evaluation=evaluation, **kwargs)
+            if hasattr(self, "_fprop_eval") and callable(getattr(self, "_fprop_eval")):
+                return self._fprop_eval(inputs, **kwargs)
             else:
                 return inputs
         else:
@@ -746,6 +738,9 @@ class DropoutLayer(StochasticLayer):
         self.rng = rng
         self.rand_mask = None
 
+    def _fprop_eval(self, inputs):
+        return inputs * self.incl_prob
+
     def _fprop(self, inputs, stochastic=True):
         """Forward propagates activations through the layer transformation.
 
@@ -763,7 +758,7 @@ class DropoutLayer(StochasticLayer):
         """
 
         if not stochastic:
-            return inputs
+            return self._fprop_eval(inputs)
 
         # Generate the random mask
         rand_mask = create_random_mask(inputs.shape, share_across_batch=self.share_across_batch)
