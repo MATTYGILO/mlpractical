@@ -74,12 +74,9 @@ supporting the conclusion that the custom activation function is causing vanishi
 
 
 %% Question 6:
+%    Question 6 - Explain how one could use a combination of L1 and L2 regularisation. Discuss any potential benefits of this approach. Present an equation for this combined loss function and explain all relevant variables and hyperparameters.}
 \newcommand{\questionSix} {
-\youranswer{
-
-    Question 6 - Explain how one could use a combination of L1 and L2 regularisation. Discuss any potential benefits of this approach. Present an equation for this combined loss function and explain all relevant variables and hyperparameters.}
-
-    L1 regularisation adds a term which is the scaled sum of the given weights.
+\youranswer{L1 regularisation adds a term which is the scaled sum of the given weights.
     As such, during back propagation, the optimiser will try to decrease the general loss whilst
     ensuring that the overal size of the weights are minimised. This can have the effect of increasing sparsity,
     as the optimiser will learn to put the majority of the strength of the weights in the most essential connections.
@@ -91,8 +88,7 @@ supporting the conclusion that the custom activation function is causing vanishi
 
     L1 and L2 can be used together to provide a balance between increasing sparsity and increasing spread amognst the weights.
     By weighting their parameters differently, we can prioritise different regularisation over others.
-
-
+    }
 }
 
 
@@ -101,6 +97,11 @@ supporting the conclusion that the custom activation function is causing vanishi
 \youranswer{Question 7 - Assume you had a limited experiment budget for exactly \textbf{4} experiment runs dedicated to testing the effectiveness of your proposed combination of L1 and L2 Regularization in Section~\ref{sec:L1L2combo}. Argue for which 4 configurations to run based on any previous results or other information you consider relevant. Run those experiments and add the results in Table~4 and Figure~5 (you will then discuss those results alongside all others in the next question below).
 
 (Even if you have not managed to implement your L1 and L2 combination; still argue based on your proposed approach).
+
+
+The problem with the above assumption, is that we only know the effect of changing the parameters individually and not the combinatorics of the \textbf{parameters}.
+By combining the regularisors it could lead to overregularisation and hinder performance.
+    Therefore, I'd simply
 
 }
 }
@@ -256,7 +257,7 @@ supporting the conclusion that the custom activation function is causing vanishi
 %% Question Table 3:
 \newcommand{\questionTableThree} {
 \youranswer{
-Question Table 3 - Fill in Table 3 with the results from your experiments for the missing hyperparameter values for each of L1 regularisation, L2 regularisation, Dropout and label smoothing (use the values shown on the table).
+%Question Table 3 - Fill in Table 3 with the results from your experiments for the missing hyperparameter values for each of L1 regularisation, L2 regularisation, Dropout and label smoothing (use the values shown on the table).
 %
 \begin{table*}[t]
     \centering
