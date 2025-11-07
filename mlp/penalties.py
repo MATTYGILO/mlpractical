@@ -20,7 +20,7 @@ class L1Penalty(object):
             coefficient: Positive constant to scale penalty term by.
         """
         assert coefficient > 0., 'Penalty coefficient must be positive.'
-        self.coefficient = coefficient
+        self.coefficient = abs(coefficient)
 
     def __call__(self, parameter):
         """Calculate L1 penalty value for a parameter.
@@ -31,7 +31,16 @@ class L1Penalty(object):
         Returns:
             Value of penalty term.
         """
-        return self.grad(parameter)
+        # Absolute value of parameters
+        parameter = np.abs(parameter)
+
+        # Sum of absolute values
+        sigma = np.sum(parameter)
+
+        # Multiply by the coefficient
+        sigma *= self.coefficient
+
+        return sigma
 
     def grad(self, parameter):
         """Calculate the penalty gradient with respect to the parameter.
@@ -44,16 +53,8 @@ class L1Penalty(object):
             should be an array of the same shape as the parameter.
         """
 
-        # Absolute value of parameters
-        parameter = np.abs(parameter)
-
-        # Sum of absolute values
-        sigma = np.sum(parameter)
-
-        # Multiply by the coefficient
-        sigma *= self.coefficient
-
-        return sigma
+        # Multiply the coefficient by the sign of the parameter
+        return self.coefficient * np.sign(parameter)
 
     def __repr__(self):
         return 'L1Penalty({0})'.format(self.coefficient)
@@ -73,7 +74,7 @@ class L2Penalty(object):
             coefficient: Positive constant to scale penalty term by.
         """
         assert coefficient > 0., 'Penalty coefficient must be positive.'
-        self.coefficient = coefficient
+        self.coefficient = abs(coefficient)
 
     def __call__(self, parameter):
         """Calculate L2 penalty value for a parameter.
@@ -83,18 +84,6 @@ class L2Penalty(object):
 
         Returns:
             Value of penalty term.
-        """
-        return self.grad(parameter)
-
-    def grad(self, parameter):
-        """Calculate the penalty gradient with respect to the parameter.
-
-        Args:
-            parameter: Array corresponding to a model parameter.
-
-        Returns:
-            Value of penalty gradient with respect to parameter. This
-            should be an array of the same shape as the parameter.
         """
 
         # Square of parameters
@@ -106,34 +95,10 @@ class L2Penalty(object):
         # Multiply by the coefficient
         sigma *= self.coefficient
 
+        # Multiply by half for correct gradient
+        sigma *= 0.5
+
         return sigma
-
-    def __repr__(self):
-        return 'L2Penalty({0})'.format(self.coefficient)
-
-class L1L2MixPenalty(object):
-    """L1 & L2 mix penalty.
-    """
-
-    def __init__(self, coefficient):
-        """Create a new L1 & L2 mix penalty object.
-
-        Args:
-            coefficient: Positive constant to scale penalty term by.
-        """
-        assert coefficient > 0., 'Penalty coefficient must be positive.'
-        self.coefficient = coefficient
-
-    def __call__(self, parameter):
-        """Calculate L1 & L2 mix penalty value for a parameter.
-
-        Args:
-            parameter: Array corresponding to a model parameter.
-
-        Returns:
-            Value of penalty term.
-        """
-        raise NotImplementedError
 
     def grad(self, parameter):
         """Calculate the penalty gradient with respect to the parameter.
@@ -145,7 +110,59 @@ class L1L2MixPenalty(object):
             Value of penalty gradient with respect to parameter. This
             should be an array of the same shape as the parameter.
         """
-        raise NotImplementedError
+
+        return self.coefficient * parameter
+
+    def __repr__(self):
+        return 'L2Penalty({0})'.format(self.coefficient)
+
+class L1L2MixPenalty(object):
+    """L1 & L2 mix penalty.
+    """
+
+    def __init__(self, coefficient, l1_ratio=0.5):
+        """Create a new L1 & L2 mix penalty object.
+
+        Args:
+            coefficient: Positive constant to scale penalty term by.
+        """
+        assert coefficient > 0., 'Penalty coefficient must be positive.'
+
+        # The ratio between L1 and L2 penalties
+        self.coefficient = abs(coefficient)
+
+        # The l1 and l2 coefficients
+        l1_coefficient = l1_ratio * self.coefficient
+        l2_coefficient = (1 - l1_ratio) * self.coefficient
+
+
+        # Define the two penalties
+        self.l1_penalty = L1Penalty(l1_coefficient)
+        self.l2_penalty = L2Penalty(l2_coefficient)
+
+
+    def __call__(self, parameter):
+        """Calculate L1 & L2 mix penalty value for a parameter.
+
+        Args:
+            parameter: Array corresponding to a model parameter.
+
+        Returns:
+            Value of penalty term.
+        """
+        return self.l1_penalty(parameter) + self.l2_penalty(parameter)
+
+    def grad(self, parameter):
+        """Calculate the penalty gradient with respect to the parameter.
+
+        Args:
+            parameter: Array corresponding to a model parameter.
+
+        Returns:
+            Value of penalty gradient with respect to parameter. This
+            should be an array of the same shape as the parameter.
+        """
+        return self.l1_penalty.grad(parameter) + self.l2_penalty.grad(parameter)
 
     def __repr__(self):
         return 'L1L2MixPenalty({0})'.format(self.coefficient)
