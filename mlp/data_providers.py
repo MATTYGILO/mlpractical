@@ -300,7 +300,7 @@ class EMNISTDataProvider(DataProvider):
         # Apply label smoothing
         smoothed_one_hot = (1 - alpha) * one_hot + (alpha / self.num_classes)
 
-        return smoothed_targets
+        return smoothed_one_hot
 
     
 
