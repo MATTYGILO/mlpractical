@@ -59,6 +59,11 @@ However, it is also known that increasing a network's width beyond a certain poi
 %% Question 5:
 \newcommand{\questionFive} {
 \youranswer{
+%    Question 5 - Discuss whether varying depth affects the results in a consistent way, and whether the results are expected and match well with the prior knowledge (by which we mean your expectations as are formed from the relevant Theory and literature)}
+for the depths tested, we found that increasing the network's depth to 2 layers slightly improved performance,
+but further increasing to 3 layers did not yield any additional benefits.
+This supports the general understanding that deeper networks can
+
 for the depths tested, increasing the network’s depth does not consistently improve performance.
 Shallower networks achieve lower training and validation errors and higher accuracies,
 while the deepest network performs worse and shows minimal improvement with training.
@@ -69,7 +74,6 @@ As seen in training for all depths, the average gradient flow drops off signific
 When repeating the experiment with ReLU, the gradients do not vanish and all depths achieve similarly high accuracy,
 supporting the conclusion that the custom activation function is causing vanishing gradients.
 }
-%    Question 5 - Discuss whether varying depth affects the results in a consistent way, and whether the results are expected and match well with the prior knowledge (by which we mean your expectations as are formed from the relevant Theory and literature)}
 }
 
 
@@ -94,38 +98,59 @@ supporting the conclusion that the custom activation function is causing vanishi
 
 %% Question 7:
 \newcommand{\questionSeven} {
-\youranswer{Due to limit experimental budget we tested 4 combinations of L1L2 parameters. For both regularisers we found parameters in the range 1e-13 to 1e-9 were most effective.
-    We tried 4 combinations of parameters for the combined L1L2 regularisation (l1: 1e-11, l2: 1e-11) a balanced small regularisation both in effective ranges.
-Next we tried (l1: 1e-9, l2: 1e-9) for a balanced moderate penalty.
-Then we tried a stronger l1 (l1: 1e-9, l2: 1e-11) to see if sparsity improved added benefits.
-Finally we tried a stronger l2 (l1: 1e-11, l2: 1e-9) to see if weight decay improved generalisation.
+\youranswer{
+%    Question 7 - Assume you had a limited experiment budget for exactly \textbf{4} experiment runs dedicated to testing the effectiveness of your proposed combination of L1 and L2 Regularization in Section~\ref{sec:L1L2combo}. Argue for which 4 configurations to run based on any previous results or other information you consider relevant. Run those experiments and add the results in Table~4 and Figure~5 (you will then discuss those results alongside all others in the next question below).
 
-    Question 7 - Assume you had a limited experiment budget for exactly \textbf{4} experiment runs dedicated to testing the effectiveness of your proposed combination of L1 and L2 Regularization in Section~\ref{sec:L1L2combo}. Argue for which 4 configurations to run based on any previous results or other information you consider relevant. Run those experiments and add the results in Table~4 and Figure~5 (you will then discuss those results alongside all others in the next question below).
-
-The four combinations I would
-
-
-(Even if you have not managed to implement your L1 and L2 combination; still argue based on your proposed approach).
-
-
-The problem with the above assumption, is that we only know the effect of changing the parameters individually and not the combinatorics of the \textbf{parameters}.
-By combining the regularisors it could lead to overregularisation and hinder performance.
-
-
+    Due to limited experimental budget we only tested 4 parameter combinations for the L1L2 regulariser. For both regularisers, we found parameters in the range 1e-13 to 1e-9 were most effective.
+    We chose the parameters using the logic that we should try a balanced version at the upper bound and lower bound of the effective region,
+    then test unbalanced versions where one of the parameters is larger than the other.
+    This resulted in us testing the combinations for a balanced small penalty, a balanced moderate penalty,
+    a moderate L1 with small L2, and small L1 with moderate L2.
+    This provides us with an effective combined upper bound and lower.
+    Since we only have 4 runs, this is an effective approach to roughly determine how strong the combined penalty should be and whether one of the parameters should be larger.
 }
 }
 
 
 %% Question 8:
 \newcommand{\questionEight} {
-\youranswer{Question 8 - Explain the experimental details (e.g. hyperparameters), discuss the results in terms of their generalisation performance and overfitting. Select and test the best performing model as part of this analysis.
+\youranswer{
+%    Question 8 - Explain the experimental details (e.g. hyperparameters), discuss the results in terms of their generalisation performance and overfitting. Select and test the best performing model as part of this analysis.
+Comparing our results to the baseline in our previous experiments, shows that for the parameters we have chosen,
+    all dual combinations of L1L2 regularisation result in reduced performance.
+    Additionally, if we compare their performance to baseline L1 and L2 it reveals that for these parameters any combination is
+    both worse than without regularisation, but also worse than using them individually.
+    From the parameters we have tested, we can see that a more
+    combining them
+    From the parameters we have tested, we can see that a more moderate L1 provides better accuracy, compared to L2 which provides minimal gains with a moderate L1 and in fact hinders performance if L1 is minimal.
+    We can see that L1, provides a larger improvement for performance.
+
+If we use our
+
+The results show that a larger L1 provides the majority
+whilst L2 provides minimal improvements within regularisation.
+In fact, using a moderate L2 without a moderate L1 reduces performance compared to the combined small version. A
+the improved
 }
 }
 
 
 %% Question 9:
 \newcommand{\questionNine} {
-\youranswer{Question 9 - A colleague proposed using a custom activation function (which can be identified as CustomActivationLayer() in your Coursework\_1.ipynb notebook and the mlp package). Run the prepared experiment in the "Problematic Training" cell in your Coursework\_1.ipynb notebook, and display the results in Figure~6. Analyse the results. Is the model overfitting? Explain the cause of the problematic performance of the model?
+\youranswer{
+%    Question 9 - A colleague proposed using a custom activation function (which can be identified as CustomActivationLayer() in your Coursework\_1.ipynb notebook and the mlp package). Run the prepared experiment in the "Problematic Training" cell in your Coursework\_1.ipynb notebook, and display the results in Figure~6. Analyse the results. Is the model overfitting? Explain the cause of the problematic performance of the model?
+
+The experiment using the proposed custom activation function $( f(x) = \frac{1}{10(1 + e^{-x})} )$ resulted in severe underfitting.
+Both training and validation accuracies remained around 0.02, which is effectively random performance for a 47-class classification task (( 1/47 ~ 0.0213 )).
+This indicates that the model failed to learn any meaningful representations during training.
+The poor performance is explained by the nature of the activation function.
+It is a scaled sigmoid, which limits outputs to the narrow range ((0, 0.1)).
+This scaling compresses activations so strongly that the gradients become extremely small,
+causing vanishing gradients early in backpropagation.
+As a result, the network’s weights receive negligible updates, preventing effective learning.
+This effect can be clearly seen in the gradient plot, where gradients quickly decay toward zero before reaching deeper layers.
+In contrast, we repeated the experiment swapping back to a standard ReLU activation
+which maintained non-zero gradients throughout the network, enabling learning.
 }
 }
 
@@ -135,6 +160,12 @@ By combining the regularisors it could lead to overregularisation and hinder per
 %% Question 10:
 \newcommand{\questionTen} {
 \youranswer{Question 10 - Briefly draw your conclusions based on the results from the previous sections (what are the take-away messages?), discussing them in the context of the overall literature, and conclude your report with a recommendation for future directions}
+
+Overall, our research has shown that the simplest solution seems to be the most effective for improving validation accuracy, namely label smoothing.
+    Other regularisation methods such as L1, L2 and Dropout all provided some improvements, but none were as effective as label smoothing.
+    Combining L1 and L2 regularisation did not yield better results than using them individually,
+    suggesting that their benefits do not compound effectively for our specific task and architecture.
+    Finally, we found that a scaled sigmoid function is not a suitable regularisation technique, as it caused vanishing gradients and prevented effective learning.
 }
 
 %% - - - - - - - - - - - - FIGURES - - - - - - - - - - - - 
@@ -186,8 +217,8 @@ By combining the regularisors it could lead to overregularisation and hinder per
 
 %% Question Figure 4:
 \newcommand{\questionFigureFour} {
-\youranswer{Question Figure 4 - Replace these images with figures depicting the Validation Accuracy and Generalisation Gap (difference between validation and training error) for each of the experiment results varying the Dropout inclusion rate, and L1/L2 weight penalty depicted in Table 3 (including any results you have filled in).
-%
+\youranswer{
+%    Question Figure 4 - Replace these images with figures depicting the Validation Accuracy and Generalisation Gap (difference between validation and training error) for each of the experiment results varying the Dropout inclusion rate, and L1/L2 weight penalty depicted in Table 3 (including any results you have filled in).
 \begin{figure*}[t]
     \centering
     \begin{subfigure}{.475\linewidth}
@@ -209,8 +240,8 @@ By combining the regularisors it could lead to overregularisation and hinder per
 
 %% Question Figure 5:
 \newcommand{\questionFigureFive} {
-\youranswer{Question Figure 5 - Add figures depicting the Validation Accuracy and Generalisation Gap (difference between validation and training error) for each of your 4 experiments  varying your hyperparameters for the combination of L1 and L2 regularisation (based on your implementation) depicted in Table 4.
-%
+\youranswer{
+%    Question Figure 5 - Add figures depicting the Validation Accuracy and Generalisation Gap (difference between validation and training error) for each of your 4 experiments  varying your hyperparameters for the combination of L1 and L2 regularisation (based on your implementation) depicted in Table 4.
 \begin{figure*}[t]
     \centering
     \begin{subfigure}{.475\linewidth}
@@ -241,7 +272,8 @@ By combining the regularisors it could lead to overregularisation and hinder per
 %% Question Figure 6:
 \newcommand{\questionFigureSix} {
 
-\youranswer{Question Figure 6 - Add figures depicting the Training Accuracy, Error, and Gradient Flow Across Layers for the 1 experiment run with the Custom Activation function (produce these by running the "Problematic Training" cell in the Coursework\_1.ipynb notebook).
+\youranswer{
+%    Question Figure 6 - Add figures depicting the Training Accuracy, Error, and Gradient Flow Across Layers for the 1 experiment run with the Custom Activation function (produce these by running the "Problematic Training" cell in the Coursework\_1.ipynb notebook).
 \begin{figure}[t]
     \centering
     \begin{subfigure}{\linewidth}
@@ -346,7 +378,7 @@ By combining the regularisors it could lead to overregularisation and hinder per
                 &  1e-07       &   0.756   &  0.790 &   0.813   \\
                 &  1e-05       &   0.437   &  2.203 &   2.218   \\
     \midrule
-            Label smoothing & 0.1 & 0.772   &  1.431 &   1.448   \\
+            Label smoothing & 0.1 & 0.780   &  1.431 &   1.448   \\
     \bottomrule
     \end{tabular}
     \caption{Results of all hyperparameter search experiments. \emph{italics} indicate the best results per series (Dropout, L1 Regularisation, L2 Regularisation, Label smoothing) and \textbf{bold} indicates the best overall.}
