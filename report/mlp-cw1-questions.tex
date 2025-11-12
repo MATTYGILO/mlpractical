@@ -240,7 +240,31 @@ By combining the regularisors it could lead to overregularisation and hinder per
 
 %% Question Figure 6:
 \newcommand{\questionFigureSix} {
+
 \youranswer{Question Figure 6 - Add figures depicting the Training Accuracy, Error, and Gradient Flow Across Layers for the 1 experiment run with the Custom Activation function (produce these by running the "Problematic Training" cell in the Coursework\_1.ipynb notebook).
+\begin{figure}[t]
+    \centering
+    \begin{subfigure}{\linewidth}
+        \includegraphics[width=\linewidth]{figures/acc_custom_activation_curve.png}
+        \caption{accuracy by epoch}
+        \label{fig:custom_act_acccurves}
+    \end{subfigure}
+    \begin{subfigure}{\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/error_custom_activation_curve}
+        \caption{error by epoch}
+        \label{fig:custom_act_errorcurves}
+    \end{subfigure}
+    \begin{subfigure}{\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/custom_activation_grad_flow}
+        \caption{gradient flow across layers}
+        \label{fig:custom_act_gradflow}
+    \end{subfigure}
+    \caption{Training accuracy, error and gradient flow for a custom activation function}
+    \label{fig:custom_act}
+\end{figure}
+
 }
 }
 
@@ -336,6 +360,20 @@ By combining the regularisors it could lead to overregularisation and hinder per
 \newcommand{\questionTableFour} {
 \youranswer{
 Question Table 4 - Add a table with the results from your 4 experiments (by which we mean: 4 training runs, NOT 4 sets of experiments) varying your hyperparameters for the combination of L1 and L2 regularisation (based on your implementation).
+
+\begin{table*}[t]
+    \centering
+    \begin{tabular}{cc|ccc}
+    \toprule
+    \ L1 Coefficient & L2 Coefficient & Val. Acc. & Train Error & Val. Error \\
+    \midrule
+    1e-11       & 1e-11       &   0.747   &  0.828 &   0.845   \\
+    1e-11       & 1e-09       &   0.744   &  0.847 &   0.866   \\
+    1e-09       & 1e-11       &   0.750   &  0.823 &   0.836   \\
+    1e-09       & 1e-09       &   0.751   &  0.794 &   0.818   \\
+    \bottomrule
+    \end{tabular}
+\end{table*}
 }
 }
 
