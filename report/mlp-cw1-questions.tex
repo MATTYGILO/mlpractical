@@ -94,14 +94,23 @@ supporting the conclusion that the custom activation function is causing vanishi
 
 %% Question 7:
 \newcommand{\questionSeven} {
-\youranswer{Question 7 - Assume you had a limited experiment budget for exactly \textbf{4} experiment runs dedicated to testing the effectiveness of your proposed combination of L1 and L2 Regularization in Section~\ref{sec:L1L2combo}. Argue for which 4 configurations to run based on any previous results or other information you consider relevant. Run those experiments and add the results in Table~4 and Figure~5 (you will then discuss those results alongside all others in the next question below).
+\youranswer{Due to limit experimental budget we tested 4 combinations of L1L2 parameters. For both regularisers we found parameters in the range 1e-13 to 1e-9 were most effective.
+    We tried 4 combinations of parameters for the combined L1L2 regularisation (l1: 1e-11, l2: 1e-11) a balanced small regularisation both in effective ranges.
+Next we tried (l1: 1e-9, l2: 1e-9) for a balanced moderate penalty.
+Then we tried a stronger l1 (l1: 1e-9, l2: 1e-11) to see if sparsity improved added benefits.
+Finally we tried a stronger l2 (l1: 1e-11, l2: 1e-9) to see if weight decay improved generalisation.
+
+    Question 7 - Assume you had a limited experiment budget for exactly \textbf{4} experiment runs dedicated to testing the effectiveness of your proposed combination of L1 and L2 Regularization in Section~\ref{sec:L1L2combo}. Argue for which 4 configurations to run based on any previous results or other information you consider relevant. Run those experiments and add the results in Table~4 and Figure~5 (you will then discuss those results alongside all others in the next question below).
+
+The four combinations I would
+
 
 (Even if you have not managed to implement your L1 and L2 combination; still argue based on your proposed approach).
 
 
 The problem with the above assumption, is that we only know the effect of changing the parameters individually and not the combinatorics of the \textbf{parameters}.
 By combining the regularisors it could lead to overregularisation and hinder performance.
-    Therefore, I'd simply
+
 
 }
 }
@@ -182,13 +191,13 @@ By combining the regularisors it could lead to overregularisation and hinder per
 \begin{figure*}[t]
     \centering
     \begin{subfigure}{.475\linewidth}
-        \includegraphics[width=\linewidth]{figures/empty_dropout_plot.png}
+        \includegraphics[width=\linewidth]{figures/dropout_plot.png}
         \caption{Accuracy and error by inclusion probability.}
         \label{fig:dropoutrates}
     \end{subfigure} 
     \begin{subfigure}{.475\linewidth}
         \centering
-        \includegraphics[width=\linewidth]{figures/empty_wd_plot.png}
+        \includegraphics[width=\linewidth]{figures/wd_plot.png}
         \caption{Accuracy and error by weight penalty.}
         \label{fig:weightrates}
     \end{subfigure} 
@@ -201,6 +210,31 @@ By combining the regularisors it could lead to overregularisation and hinder per
 %% Question Figure 5:
 \newcommand{\questionFigureFive} {
 \youranswer{Question Figure 5 - Add figures depicting the Validation Accuracy and Generalisation Gap (difference between validation and training error) for each of your 4 experiments  varying your hyperparameters for the combination of L1 and L2 regularisation (based on your implementation) depicted in Table 4.
+%
+\begin{figure*}[t]
+    \centering
+    \begin{subfigure}{.475\linewidth}
+        \includegraphics[width=\linewidth]{figures/l1_1e-11_l2_1e-11_acc_gen_gap}
+        \caption{Balance Small L1L2 Regularisation}
+        \label{fig:balancedsmallreg}
+    \end{subfigure}
+    \begin{subfigure}{.475\linewidth}
+        \includegraphics[width=\linewidth]{figures/l1_1e-09_l2_1e-09_acc_gen_gap}
+        \caption{Balance Small L1L2 Regularisation}
+        \label{fig:balancedmoderatereg}
+    \end{subfigure}
+    \begin{subfigure}{.475\linewidth}
+        \includegraphics[width=\linewidth]{figures/l1_1e-09_l2_1e-11_acc_gen_gap}
+        \caption{Stronger L1 Regularisation}
+        \label{fig:strongerl1}
+    \end{subfigure}
+    \begin{subfigure}{.475\linewidth}
+        \includegraphics[width=\linewidth]{figures/l1_1e-11_l2_1e-09_acc_gen_gap}
+        \caption{Stronger L2 Regularisation}
+        \label{fig:strongerl2}
+    \end{subfigure}
+    \label{fig:l1l2regs}
+\end{figure*}
 }
 }
 
@@ -269,10 +303,10 @@ By combining the regularisors it could lead to overregularisation and hinder per
         Baseline &  -         &   0.757   &  0.783 &   0.801   \\
     \midrule
         \multirow{4}*{Dropout}
-                &  0.6         &   0.666   &  2.674 &   2.682   \\
-                &  0.7         &   0.701   &  1.974 &   1.983   \\
-                &  0.85        &   0.743   &  1.083 &   1.096   \\
-                &  0.97        &   0.766   &  0.774 &   0.794   \\
+                & 0.35        &   0.023   &  3.782 &   3.783   \\
+                & 0.55        &   0.641   &  2.987 &   2.993   \\
+                & 0.75        &   0.716   &  1.625 &   1.634   \\
+                & 0.95        &   0.760   &  0.809 &   0.828   \\
     \midrule
         \multirow{4}*{L1 penalty}
                 &  1e-13       &   0.755   &  0.778 &   0.798   \\
