@@ -60,29 +60,9 @@ However, it is also known that increasing a network's width beyond a certain poi
 \newcommand{\questionFive} {
 \youranswer{
 %    Question 5 - Discuss whether varying depth affects the results in a consistent way, and whether the results are expected and match well with the prior knowledge (by which we mean your expectations as are formed from the relevant Theory and literature)}
-for the depths tested, we found that increasing the network's depth from 1 to 2 layers slightly improved performance,
-but a further increase to 3 layers did not yield any additional benefits.
-
-We can see that even though the train error is decreased as we go from depth 2 to 3, the validation error has not decreased.
-This shows some preemptive signs of overfitting, though it is yet to be reached.
-
-Overall, the data is supported by the literature. As larger models enable greater complexity, which can allow for
-    more complex patterns to be modelled. Additionally, we can see early signs of overfitting as the generalisation gap begins
-    to increase from depth 2 to 3. This is supported by the literature as models with greater complexity can
-    overfit the noise of the data leading to increased bias and worsened generalisation.
-
-This supports the general understanding that deeper networks can provide greater complexity and thus can fit more
-challenging probelems. However, they can also
-
-for the depths tested, increasing the network’s depth does not consistently improve performance.
-Shallower networks achieve lower training and validation errors and higher accuracies,
-while the deepest network performs worse and shows minimal improvement with training.
-This indicates that increasing depth makes optimisation more difficult.
-This behaviour is likely caused by the custom activation function used, $( 1 / (10 \times (1 + e^{-x})) )$,
-which heavily compresses output values and causes vanishing gradients across layers.
-As seen in training for all depths, the average gradient flow drops off significiantly from the final layer.
-When repeating the experiment with ReLU, the gradients do not vanish and all depths achieve similarly high accuracy,
-supporting the conclusion that the custom activation function is causing vanishing gradients.
+for the depths tested, increasing the network depth from one to two hidden layers yields a small improvement in validation accuracy, but extending the depth further to three layers provides no additional benefit. Although the training error continues to decrease with depth, the validation error plateaus, indicating that additional capacity is not translating into better generalisation.
+The slight rise in the generalisation gap from depth two to depth three suggests the early onset of overfitting: the model is becoming better at fitting the training data without achieving corresponding gains on unseen data. This behaviour is consistent with standard theory and prior literature, which show that deeper networks can represent more complex functions but are also more prone to fitting noise when the task does not require the additional capacity.
+Overall, the results align with expectations: moderate increases in depth can improve performance, but beyond a certain point the added complexity offers diminishing returns and begins to harm generalisation.
 }
 }
 
@@ -90,53 +70,37 @@ supporting the conclusion that the custom activation function is causing vanishi
 %% Question 6:
 %    Question 6 - Explain how one could use a combination of L1 and L2 regularisation. Discuss any potential benefits of this approach. Present an equation for this combined loss function and explain all relevant variables and hyperparameters.}
 \newcommand{\questionSix} {
-\youranswer{We can combine L1 and L2 regularsation into a single regularser. We can supply two parameters, weighting
-the regularisers differently.
-L1 loss has the tendency to increase sparsity of weights, as it adds an extra term which is the sum of the weights
-L2 loss has the tendency to smooth the weights penalising larger weights more so, it does this by adding an extra term which is the sum of the square of the weights
+\youranswer{
+We can combine L1 and L2 regularisation into a single regulariser by introducing a separate parameter for each
+regularising term. L1 encourages sparsity by penalising the absolute magnitude of the weights,
+while L2 smooths the weights by penalising large weights more strongly through their squared magnitude.
 
-L1 on it's own can lead to
+This combined regulariser could provide a flexible balance between weight sparsity and weight smoothness,
+whilst reducing the negative consequences of each individual regulariser. For example:
+L2 can prevent L1 from discarding weaker correlated weights making the model more stable,
+whilst L1 provides the ability to eliminate truly irrelevant weights that L2 may maintain.
+
+We can define this loss function with combined regulariser using the equation below:
+
 \[
 L_{\text{total}}
 = L_{\text{data}}
 + \lambda_{1}\|w\|_{1}
-+ \lambda_{2}\|w\|_{2}^{2}
++ \lambda_{2}\|w\|_{2}^{2},
 \]
 
 \begin{itemize}
-    \item \(L_{\text{total}}\): The total loss the optimiser is minimising
-    \item \(L_{\text{data}}\): The loss produced from the data
-    \item \(w\): Vector of model weights.
-    \item \(\|w\|_{1}\): L1 norm (sum of absolute weight values).
-    \item \(\|w\|_{2}^{2}\): Squared L2 norm (sum of squared weight values).
-    \item \(\lambda_{1}\): Strength of L1 regularisation.
-    \item \(\lambda_{2}\): Strength of L2 regularisation.
+    \item \( L_{\text{total}} \): The total loss the optimiser is minimising.
+    \item \( L_{\text{data}} \): The loss produced from the data (e.g.\ cross-entropy or MSE).
+    \item \( w \): Vector of the model weights.
+    \item \( \|w\|_{1} \): L1 term, promoting sparsity.
+    \item \( \|w\|_{2}^{2} \): L2 term, encourages smoother weights.
+    \item \( \lambda_{1} \): Strength of the L1 regularisation term.
+    \item \( \lambda_{2} \): Strength of the L2 regularisation term.
 \end{itemize}
-
-
-
-A combined loss provides potential benefits as we may not want a combination of sparsity and spread.
-This allows for greater control over how much sparsity and spread we wish for.
-
-The formula for the combined regulariser is:
-
-This could potential benefits as we may
-
-
-    L1 regularisation adds a term which is the scaled sum of the given weights.
-    As such, during back propagation, the optimiser will try to decrease the general loss in addition to the overall
-    sum of the weights. This can have the effect of increasing sparsity, as the optimiser will learn to put the
-    majority of the strength of the weights in the most essential connections.
-
-    L2 regularisation adds a term which is a scaled sum of the squares of the weights,
-    this leads to larger weights being accentuated more than smaller weights. As such the optimiser will incentived
-    to reduce the larger weights more than the smaller weights.
-    This can improve generalisation as probabilties can be distributed more evenly across the different weights.
-
-    L1 and L2 can be used together to provide a balance between increasing sparsity and increasing spread amognst the weights.
-    By weighting their parameters differently, we can prioritise different regularisation over others.
-    }
 }
+}
+
 
 
 %% Question 7:
