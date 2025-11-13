@@ -108,13 +108,17 @@ L_{\text{total}}
 \youranswer{
 %    Question 7 - Assume you had a limited experiment budget for exactly \textbf{4} experiment runs dedicated to testing the effectiveness of your proposed combination of L1 and L2 Regularization in Section~\ref{sec:L1L2combo}. Argue for which 4 configurations to run based on any previous results or other information you consider relevant. Run those experiments and add the results in Table~4 and Figure~5 (you will then discuss those results alongside all others in the next question below).
 
-    Due to limited experimental budget we only tested 4 parameter combinations for the L1L2 regulariser. For both regularisers, we found parameters in the range 1e-13 to 1e-9 were most effective.
-    We chose the parameters using the logic that we should try a balanced version at the upper bound and lower bound of the effective region,
-    then test unbalanced versions where one of the parameters is larger than the other.
-    This resulted in us testing the combinations for a balanced small penalty, a balanced moderate penalty,
-    a moderate L1 with small L2, and small L1 with moderate L2.
-    This provides us with an effective combined upper bound and lower.
-    Since we only have 4 runs, this is an effective approach to roughly determine how strong the combined penalty should be and whether one of the parameters should be larger.
+    Due to limited experimental budget of four runs, we focused on the interaction between L1 and L2 rather than just finding a single “best” setting. From our earlier tests (Table~\ref{tab:hp_search}), both L1 and L2 have useful ranges around 1e-13–1e-9, with performance peaking near 1e-11 and degrading when too large. Guided by that, we probed two balanced points and two asymmetric points to test whether gains are driven primarily by one term or if a complementary effect emerges.
+
+    Specifically, we ran:
+    \begin{itemize}
+        \item Balanced small: \(\lambda_1=1\text{e-}11,\ \lambda_2=1\text{e-}11\) — tests a minimal joint penalty near each method’s individual sweet spot.
+        \item Balanced moderate: \(\lambda_1=1\text{e-}09,\ \lambda_2=1\text{e-}09\) — tests whether increasing both together maintains or improves generalisation.
+        \item Stronger L1: \(\lambda_1=1\text{e-}09,\ \lambda_2=1\text{e-}11\) — tests if L1 drives most of the benefit with only a small L2 for smoothing.
+        \item Stronger L2: \(\lambda_1=1\text{e-}11,\ \lambda_2=1\text{e-}09\) — tests if additional L2 helps when L1 is kept small.
+    \end{itemize}
+
+    This set stays within the four-run budget while answering a clearer question: do we see synergy between L1 and L2, or does one term dominate? Using balanced vs asymmetric pairs lets us attribute any improvement to either interaction effects or to a single regulariser, and the chosen magnitudes reflect the effective region indicated by our prior results.
 }
 }
 
