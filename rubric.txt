@@ -1,0 +1,112 @@
+"Question 1:
+Explain what these figures (Figures 1.a and 1.b) contain and how the curves evolve, and spot where overfitting occurs. Reason based on the min/max points and velocities (direction and magnitude of change) of the accuracy and error curves."
+"Training accuracy increases."	"Validation accuracy caps/reaches maximum/stops increasing..."	"""...around/at epoch ##""
+
+[have quick glimpse this is very roughly correct for their Figure 1.a]."	States that there is an increase of the generalisation gap...	"... and points out where that is, using the graph.
+
+[quick look at Figure 1.b; it should be around the same epoch as for the accuracy figure]."
+
+"Question
+Table 1"
+Table 1 - It has been filled and results roughly around what we would expect (not obviously misacalucated or the result of a broken model)
+
+Question Figure 2
+Figure 2 - Requested graphs are present and roughly as expected (ran for enough time-steps and not indicative of a broken model or run).
+
+"Question 2:
+Present your network width experiment results by using the relevant figure and table.
+[see also Question 3]"
+Correctly states which models have been overfit...	"... and points to evidence in the figure for the specific training instance/models that overfit.
+
+[This can be a statement on which models have their generalisation gap increasing or pointing out specific values on the figures].
+
+[check Table 1 and Figure 2  that their statements are mostly concistent with their results]."
+
+"Question 3
+[Marking 2 & 3 together, doesn't matter which answer has the info]:
+Discuss whether varying width affects the results in a consistent way, and whether the results are expected and match well with the prior knowledge (by which we mean your expectations as are formed from the relevant Theory and literature)"
+"Correctly discusses the trend (or lack thereof) of the generalisation gap/overfitting as hyperparamer values change.
+
+[check Table 1 and Figure 2 in case something else holds in the students case; what matters here is consistency with their own results]."	Points out the model with the best validation accuracy (from this series).	"Points out the model that overfits less (from this series).
+
+[these are not necessarily the same, so the student should not just say ""this model is best"". If they simply state this charitably assume they are talking about overfitting]."	Uses relevant literature to form their expectations of how the experiment will/should have or would have been expected to turn out.	Forms expectations via (reasonably) arguing based on model capacity.	Goes beyond these expectations in successfully addressing Questions 2&3 (not simply added information but either things that add to the argument or an excellent delivery of previous points).
+
+Question Table 2
+Table 2 - It has been filled and results roughly around what we would expect (not obviously misacalucated or the result of a broken model)
+
+Question Figure 3
+Figure 3 - Requested graphs are present and roughly as expected (ran for enough time-steps and not indicative of a broken model or run).
+
+"Question 4:
+Present your network depth experiment results by using the relevant figure and table
+[see Question 5]"
+Correctly states which models have been overfit...	"... and points to evidence in the figure for the specific training instance/models that overfit.
+
+[This can be a statement on which models have their generalisation gap increasing or pointing out specific values on the figures].
+
+[check Table 2 and Figure 3  that their statements are mostly concistent with their results]."
+
+"Question 5:
+[Marking 4 & 5 together, doesn't matter which answer has the info]:
+Discuss whether varying depth affects the results in a consistent way, and whether the results are expected and match well with the prior knowledge (by which we mean your expectations as are formed from the relevant Theory and literature)"
+"Discusses the trend (or lack thereof) of the generalisation gap/overfitting as hyperparamer values change.
+
+[check Table 2 and Figure 3 in case something else holds in the students case; what matters here is consistency with their own results]."	Points out the model with the best validation accuracy (from this series).	"Points out the model that overfits less  (from this series).
+
+[these are not necessarily the same, so the student should not just say ""this model is best"". If they simply state this charitably assume they are talking about overfitting]."	Uses relevant literature to form their expectations of how the experiment will/should have or would have been expected to turn out.	Forms expectations via (reasonably) arguing based on model capacity.	Goes beyond these expectations in successfully addressing  Questions 4&5 (not simply added information but either things that add to the argument or an excellent delivery of previous points).
+
+Code Marking:
+Check: Code exists	Check: Test package exists	Forward Propagation for DropoutLayer [auto-marked]	Backwards Propagation for DropoutLayer [auto-marked]	Call function for L1Penalty [auto-marked]	Grad check for L1Penalty [auto-marked]	Call func for L2Penalty [auto-marked]	Grad check for L2Penalty [auto-marked]	Label Smoothing correctly implemented	L1 & L2 mix is implemented (any form)	L1 & L2 mix implementation is of the described function in the answer to Question 6
+
+
+"Question 6:
+Explain how one could use a combination of L1 and L2 regularisation. Discuss any potential benefits of this approach. Present an equation for this combined loss function and explain all relevant variables and hyperparameters"
+State we could add terms with L1 and L2 weights in the cost function.	"Give an equation for the new penalty term.
+
+[e.g.: penalty = alpha * l1_penalty + (1 – alpha) * l2_penalty]."	Identify a relevant approach in the literature [this requires a reference].	"Mention this adds an extra hyperparameter.
+
+[explicit statement, not just adding to equation]"	... and explain the importance of that.	Explain the effect this L1&L2 regularisation mix has on training. Why might someone use this setup over a plain L1 or L2 penalty?	Goes beyond these expectations in successfully addressing  Questions 6 (not simply added information but either things that add to the argument or an excellent delivery of previous points).
+
+Question Table 3
+Table 3 - It has been filled and results roughly around what we would expect (not obviously misacalucated or the result of a broken model)
+
+Question Figure 4
+Figure 4 - Requested graphs are present and roughly as expected (ran for enough time-steps and not indicative of a broken model or run).
+
+Question Table 4
+Table 4 - It has been filled and results roughly around what we would expect (not obviously misacalucated or the result of a broken model)
+
+Question Figure 5
+Figure 5 - Requested graphs are present and roughly as expected (ran for enough time-steps and not indicative of a broken model or run).
+
+"Question 7:
+Assume you had a limited experiment budget for exactly 4 experiment runs dedicated to testing the effectiveness of your proposed combination of L1 and L2 Regularization in Section 3.2.1. Argue for which 4 configurations to run based on any previous results or other information you consider relevant. Run those experiments and add the results in Table 4 and Figure 5 (you will then discuss those results alongside all others in the next question below). (Even if you have not managed to implement your L1 and L2 combination; still argue based on your proposed approach)."
+"Stays within the expected 4 different experiment setups (as expressed in terms of what hyperparameters they pick; but it can also be a change in achitecture or similar if they want)
+[Anything more than that is ignored; first 4 configurations are looked at along the relevant argumentation]"	An attempt (at minimum) to specify a question or what they would be trying to figure out from these experiments.	"... and that question goes  beyond trying to see which hyperparameter configurations would work best.
+
+[Giving a bit more structure, like ""Do smaller values of one hyperparameter value work better with larger values of this other one"" is sufficient]."	... and successfully argues for the value of this question (that goes beyond a simple hyperparameter configuration) 	Successfully argues for how the proposed experiments will help address the question. [consider using evidence from the literature and previous experimental results in this coursework]	Does an exceptional job delivering an argument or surprises positively with its insight.
+
+"Question 8:
+Explain the experimental details (e.g. hyperparameters), discuss the results in terms of their generalisation performance and overfitting. Select and test the best performing model as part of this analysis."
+"All regularisation methods can help with overfitting/overtraining for some hyper parameter value.
+
+[However, the point can be given by stating that this is in fact not the case. Check  Table 3. Consistency with presented results is what matters here]."	"There are regularisation (hyper parameter) values for which performance degrades significantly.
+
+[If however, we have the case as in the previous point where all results are bad, this point is replaced with a need to discuss the expectation that some hyper parameter values make sense to reduce performance but others do not]."	Correctly state (based on their data) which model from the single-regularisation-approach performed best, based on validation accuracy (or error if they have that).	Correctly state (based on their data) which model from the single-regularisation-approach performed best in terms of generalisation gap / not overfitting (the smaller the better).	Compare the performance of baseline with softlabelled baseline.	Compare performance with regularisation of any kind (any model from any set up or make a general comparison) with that of the baseline's performance.	Make a reasonable (based on their evidence; see Figure 4 and Table 3) statement on whether overfitting is being tackled by some, any, or all of the approaches.	Note some, valid based on their results, relationship between best performing (in terms of accuracy) model and the respective generalisation gap.	"Run and present test results for the best performing model in terms of accuracy and/or overfitting.
+
+[Note that because they were given results for most models, they might have to train the best model before they can test. Don't penalise this, but check that they report test results. Same with next point]."	Goes beyond these expectations in successfully addressing  Question 8 (not simply added information but either things that add to the argument or an excellent delivery of previous points).
+
+Question Figure 6
+Figure 6 - Requested graphs are present and roughly as expected (ran for enough time-steps and not indicative of a broken model or run).
+
+"Question 9:
+A colleague proposed using a custom activation function (which can be identified as Custom_ActivationLayer() in your Coursework_1.ipynb notebook and the mlp package). Run the prepared experiment in the ""Problematic Training"" cell in your Coursework_1.ipynb notebook, and display the results in Figure 6. Analyse the results. Is the model overfitting? Explain the cause of the problematic performance of the model?"
+Clearly states whether the model is overfitting or underfitting, referring to the correct visual evidence from Figure 6.	Accurately names or describes the type of training fault observed. [Avoid vague terms like “it’s unstable.”].	Correctly identifies what element in the network setup or  design is producing the fault.	Explains how that element leads to the observed behaviour.	Discusses how the problem could be addressed.	Goes beyond these expectations in successfully addressing  Question 9 (not simply added information but either things that add to the argument or an excellent delivery of previous points).
+
+"Question 10:
+Briefly draw your conclusions based on the results from the previous sections (what are the take-away messages?), discussing them in the context of the overall literature, and conclude your report with a recommendation for future directions"
+(At least an attempt to) summarise the experiment results	The sumary effectively conveys the range of things tested	There is some relevant discussion (not just a mention) on some of the literature cited earlier in the report.	Results are compared with relevant results in the literature (any literature)	"State whether dropout or L1/L2 helped with overfitting.
+
+[not simply giving results that indicate that or say that X model helped; I am looking for a general statement on how the techniques seem to work, based on the results]"	Compare Dropout-only with Weight-only (either or both of L1 and L2) based on the experimental results.	Indicate additional (that is: not asked for explicitly in the paper)  reasonable alternatives for combatting overfitting	... and cite an appropriate  paper for that method	Suggest any reasonable future work (at least incremental, as in "we could also try this") [Answer to Question 7 does not count for this one. You will need something new]	Effectively make use of the literature in arguing for Future Work	Explain the relevance of "network capacity" to overfitting. Discussing how both width and depth increase the newtworks size should be treated as equivalent to using the term; then also explain how that affects overfitting.	"You can find one thing that shows quality extra/not anticipated from these points analysis.
+
+[Maybe the future work suggestion is particularly interesting or shows good thought, or perhaps there is some further interesting analysis of the experiments, or they attempt a mini comparative review of different approaches using evidence from the literature]"
