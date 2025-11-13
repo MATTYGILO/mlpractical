@@ -60,9 +60,19 @@ However, it is also known that increasing a network's width beyond a certain poi
 \newcommand{\questionFive} {
 \youranswer{
 %    Question 5 - Discuss whether varying depth affects the results in a consistent way, and whether the results are expected and match well with the prior knowledge (by which we mean your expectations as are formed from the relevant Theory and literature)}
-for the depths tested, we found that increasing the network's depth to 2 layers slightly improved performance,
-but further increasing to 3 layers did not yield any additional benefits.
-This supports the general understanding that deeper networks can
+for the depths tested, we found that increasing the network's depth from 1 to 2 layers slightly improved performance,
+but a further increase to 3 layers did not yield any additional benefits.
+
+We can see that even though the train error is decreased as we go from depth 2 to 3, the validation error has not decreased.
+This shows some preemptive signs of overfitting, though it is yet to be reached.
+
+Overall, the data is supported by the literature. As larger models enable greater complexity, which can allow for
+    more complex patterns to be modelled. Additionally, we can see early signs of overfitting as the generalisation gap begins
+    to increase from depth 2 to 3. This is supported by the literature as models with greater complexity can
+    overfit the noise of the data leading to increased bias and worsened generalisation.
+
+This supports the general understanding that deeper networks can provide greater complexity and thus can fit more
+challenging probelems. However, they can also
 
 for the depths tested, increasing the network’s depth does not consistently improve performance.
 Shallower networks achieve lower training and validation errors and higher accuracies,
@@ -80,10 +90,43 @@ supporting the conclusion that the custom activation function is causing vanishi
 %% Question 6:
 %    Question 6 - Explain how one could use a combination of L1 and L2 regularisation. Discuss any potential benefits of this approach. Present an equation for this combined loss function and explain all relevant variables and hyperparameters.}
 \newcommand{\questionSix} {
-\youranswer{L1 regularisation adds a term which is the scaled sum of the given weights.
-    As such, during back propagation, the optimiser will try to decrease the general loss whilst
-    ensuring that the overal size of the weights are minimised. This can have the effect of increasing sparsity,
-    as the optimiser will learn to put the majority of the strength of the weights in the most essential connections.
+\youranswer{We can combine L1 and L2 regularsation into a single regularser. We can supply two parameters, weighting
+the regularisers differently.
+L1 loss has the tendency to increase sparsity of weights, as it adds an extra term which is the sum of the weights
+L2 loss has the tendency to smooth the weights penalising larger weights more so, it does this by adding an extra term which is the sum of the square of the weights
+
+L1 on it's own can lead to
+\[
+L_{\text{total}}
+= L_{\text{data}}
++ \lambda_{1}\|w\|_{1}
++ \lambda_{2}\|w\|_{2}^{2}
+\]
+
+\begin{itemize}
+    \item \(L_{\text{total}}\): The total loss the optimiser is minimising
+    \item \(L_{\text{data}}\): The loss produced from the data
+    \item \(w\): Vector of model weights.
+    \item \(\|w\|_{1}\): L1 norm (sum of absolute weight values).
+    \item \(\|w\|_{2}^{2}\): Squared L2 norm (sum of squared weight values).
+    \item \(\lambda_{1}\): Strength of L1 regularisation.
+    \item \(\lambda_{2}\): Strength of L2 regularisation.
+\end{itemize}
+
+
+
+A combined loss provides potential benefits as we may not want a combination of sparsity and spread.
+This allows for greater control over how much sparsity and spread we wish for.
+
+The formula for the combined regulariser is:
+
+This could potential benefits as we may
+
+
+    L1 regularisation adds a term which is the scaled sum of the given weights.
+    As such, during back propagation, the optimiser will try to decrease the general loss in addition to the overall
+    sum of the weights. This can have the effect of increasing sparsity, as the optimiser will learn to put the
+    majority of the strength of the weights in the most essential connections.
 
     L2 regularisation adds a term which is a scaled sum of the squares of the weights,
     this leads to larger weights being accentuated more than smaller weights. As such the optimiser will incentived
@@ -159,13 +202,12 @@ which maintained non-zero gradients throughout the network, enabling learning.
 
 %% Question 10:
 \newcommand{\questionTen} {
-\youranswer{Question 10 - Briefly draw your conclusions based on the results from the previous sections (what are the take-away messages?), discussing them in the context of the overall literature, and conclude your report with a recommendation for future directions}
-
-Overall, our research has shown that the simplest solution seems to be the most effective for improving validation accuracy, namely label smoothing.
-    Other regularisation methods such as L1, L2 and Dropout all provided some improvements, but none were as effective as label smoothing.
+\youranswer{Other regularisation methods such as L1, L2 and Dropout all provided some improvements, but none were as effective as label smoothing.
     Combining L1 and L2 regularisation did not yield better results than using them individually,
     suggesting that their benefits do not compound effectively for our specific task and architecture.
     Finally, we found that a scaled sigmoid function is not a suitable regularisation technique, as it caused vanishing gradients and prevented effective learning.
+%    Question 10 - Briefly draw your conclusions based on the results from the previous sections (what are the take-away messages?), discussing them in the context of the overall literature, and conclude your report with a recommendation for future directions}
+}
 }
 
 %% - - - - - - - - - - - - FIGURES - - - - - - - - - - - - 
