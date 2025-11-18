@@ -26,26 +26,36 @@
 
 %% Question 1:
 \newcommand{\questionOne} {
-\youranswer{
-The figures show how the loss and accuracy of the neural network change over epochs during training and validation. The validation set contains data points the network has not seen before, which helps us measure how well the model generalises. By comparing training and validation results, we can tell whether the model is underfitting or overfitting.
-Figure (a) shows that the training accuracy increases steadily and then plateaus. The validation accuracy also increases at first, then flattens out and slowly starts to decrease.
-Figure (b) shows that the training error decreases consistently throughout the epochs, which is expected. However, the validation error drops during the early epochs and then begins to rise steadily afterwards.
-Overall, this pattern clearly shows that the model is overfitting. The turning point happens around epoch 10–15, where the validation accuracy reaches its maximum and the validation error reaches its minimum. After this point, the training curves continue to improve while the validation curves move in the opposite direction, showing that the model is learning the training data too specifically and losing generalisation.
+\youranswer{training accuracy increases
+
+    the training accuracy rises steadily for all the of epochs shown, whereas the validation accuracy only increases for the first 15, reaching a maximum value of ~83\%, after which it steadily declines.
+
+We can see in Figure 1b the corresponding error curves track the similar pattern but in opposite direction. The training error decreases steadily throughout all the epochs, whereas the the validation error only decreases for the first few epochs, reaches a minimum and then steadily tracks upwards.
+The only thing to note, is that whilst the validation accuracy decreases very slowly, the validation error is increasing almost linearly.
+Where it's accuracy is greater than it's initial accuracy whilst at the same time it's error. is larger than it's initial error.
+
+the model’s accuracy (Figure 1.a) and error (Figure 1.b) evolve over the training epochs, for both the training and validation sets. Together, they illustrate how well the model fits the training data and how well it generalises to unseen data.
+Overfitting is evident as soon as the validation curves reverse direction while the training curves continue to improve. This occurs at approximately epoch 10–15 in both plots—where validation accuracy reaches its maximum and validation error reaches its minimum. After this point, the widening gap between the training and validation curves shows that the model is memorising the training data rather than improving its generalisation ability.
 }
 }
 
 %% Question 2:
 \newcommand{\questionTwo} {
-\youranswer{ }
+\youranswer{We can see that
+}
 %    Question 2 - Present your network width experiment results by using the relevant figure and table}
 }
+
+
+%%
 
 %% Question 3:
 \newcommand{\questionThree} {
 \youranswer{for the widths tested, increasing the network's width consistently improves validation accuracy and reduces
 both training and validation errors. This suggests that wider networks improve overall performance.
 This behaviour is typical up to a point, as wider networks have greater capacity to model complex patterns.
-However, it is also known that increasing a network's width beyond a certain point, results in either overfitting or reduce performance gains.
+However, it is also known that increasing a network's width beyond a certain point, results in either overfitting or reducing performance gains.
+We can see the early signs of overfitting within the width 128 as it's generalisation gap larger than for 64 and 32.
 %    Question 3 - Discuss whether varying width affects the results in a consistent way, and whether the results are expected and match well with the prior knowledge (by which we mean your expectations as are formed from the relevant Theory and literature)}
 }
 }
@@ -61,8 +71,8 @@ However, it is also known that increasing a network's width beyond a certain poi
 \youranswer{
 %    Question 5 - Discuss whether varying depth affects the results in a consistent way, and whether the results are expected and match well with the prior knowledge (by which we mean your expectations as are formed from the relevant Theory and literature)}
 for the depths tested, increasing the network depth from one to two hidden layers yields a small improvement in validation accuracy, but extending the depth further to three layers provides no additional benefit. Although the training error continues to decrease with depth, the validation error plateaus, indicating that additional capacity is not translating into better generalisation.
-The slight rise in the generalisation gap from depth two to depth three suggests the early onset of overfitting: the model is becoming better at fitting the training data without achieving corresponding gains on unseen data. This behaviour is consistent with standard theory and prior literature, which show that deeper networks can represent more complex functions but are also more prone to fitting noise when the task does not require the additional capacity.
-Overall, the results align with expectations: moderate increases in depth can improve performance, but beyond a certain point the added complexity offers diminishing returns and begins to harm generalisation.
+The slight rise in the generalisation gap from depth two to depth three suggests the earliest onset of overfitting: the model is becoming better at fitting the training data without achieving corresponding gains on unseen data.
+This behaviour is consistent with standard theory, as depth two multi layer perceptrons are known to be universal function approximators, capable of representing any continuous function given sufficient width.
 }
 }
 
@@ -104,11 +114,12 @@ L_{\text{total}}
 
 
 %% Question 7:
-\newcommand{\questionSeven} {
-\youranswer{
 %    Question 7 - Assume you had a limited experiment budget for exactly \textbf{4} experiment runs dedicated to testing the effectiveness of your proposed combination of L1 and L2 Regularization in Section~\ref{sec:L1L2combo}. Argue for which 4 configurations to run based on any previous results or other information you consider relevant. Run those experiments and add the results in Table~4 and Figure~5 (you will then discuss those results alongside all others in the next question below).
-
-    Due to limited experimental budget of four runs, we focused on the interaction between L1 and L2 rather than just finding a single “best” setting. From our earlier tests (Table~\ref{tab:hp_search}), both L1 and L2 have useful ranges around 1e-13–1e-9, with performance peaking near 1e-11 and degrading when too large. Guided by that, we probed two balanced points and two asymmetric points to test whether gains are driven primarily by one term or if a complementary effect emerges.
+\newcommand{\questionSeven} {
+\youranswer{Due to limited experimental budget of four runs, we focused on the interaction between L1 and L2 rather than
+just finding a single “best” setting. From our earlier tests, both L1 and L2 have useful ranges around 1e-13–1e-9,
+with performance peaking near 1e-11 and degrading when too large.
+Guided by that, we probed two balanced points and two asymmetric points to test whether gains are driven primarily by one term or if a complementary effect emerges.
 
     Specifically, we ran:
     \begin{itemize}
@@ -182,7 +193,7 @@ which maintained non-zero gradients throughout the network, enabling learning.
 
 %% Question Figure 2:
 \newcommand{\questionFigureTwo} {
-\youranswer{See figures above%    Question Figure 2 - Replace the images in Figure 2 with figures depicting the accuracy and error, training and validation curves for your experiments varying the number of hidden units.
+\youranswer{%    Question Figure 2 - Replace the images in Figure 2 with figures depicting the accuracy and error, training and validation curves for your experiments varying the number of hidden units.
 \begin{figure}[t]
     \centering
     \begin{subfigure}{\linewidth}
