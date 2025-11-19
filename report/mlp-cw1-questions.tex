@@ -26,22 +26,17 @@
 
 %% Question 1:
 \newcommand{\questionOne} {
-\youranswer{training accuracy increases
-
-    the training accuracy rises steadily for all the of epochs shown, whereas the validation accuracy only increases for the first 15, reaching a maximum value of ~83\%, after which it steadily declines.
-
-We can see in Figure 1b the corresponding error curves track the similar pattern but in opposite direction. The training error decreases steadily throughout all the epochs, whereas the the validation error only decreases for the first few epochs, reaches a minimum and then steadily tracks upwards.
-The only thing to note, is that whilst the validation accuracy decreases very slowly, the validation error is increasing almost linearly.
-Where it's accuracy is greater than it's initial accuracy whilst at the same time it's error. is larger than it's initial error.
-
-the model’s accuracy (Figure 1.a) and error (Figure 1.b) evolve over the training epochs, for both the training and validation sets. Together, they illustrate how well the model fits the training data and how well it generalises to unseen data.
-Overfitting is evident as soon as the validation curves reverse direction while the training curves continue to improve. This occurs at approximately epoch 10–15 in both plots—where validation accuracy reaches its maximum and validation error reaches its minimum. After this point, the widening gap between the training and validation curves shows that the model is memorising the training data rather than improving its generalisation ability.
+\youranswer{training accuracy increases over all the epochs displayed, whereas, the validation accuracy reaches a peak
+around epoch 12 (~83\%) before steadily declining. We see that in figure 1b, the training error consistently decreases
+across all the epochs shown, whereas the validation error reaches a minimum around epoch 9 before increasingly at a
+steady rate. Additionally, we can see that the generalisation gap increases significiantly from epoch 9 onwards.
+This, widening gap between the errors shows that the model is significiantly overfitting the data.
 }
 }
 
 %% Question 2:
 \newcommand{\questionTwo} {
-\youranswer{We can see that
+\youranswer{
 }
 %    Question 2 - Present your network width experiment results by using the relevant figure and table}
 }
@@ -51,7 +46,14 @@ Overfitting is evident as soon as the validation curves reverse direction while 
 
 %% Question 3:
 \newcommand{\questionThree} {
-\youranswer{for the widths tested, increasing the network's width consistently improves validation accuracy and reduces
+\youranswer{models __ and __ have been overfit, we can see this from figure 2b that their generalisation gap increases
+significiantly over the epochs, whereas model ___ ___. This suggests that as the width of a model increases
+
+increases significiantly whereas models __ and __ ____.
+is the case as it's generalisation gap increases
+
+
+    for the widths tested, increasing the network's width consistently improves validation accuracy and reduces
 both training and validation errors. This suggests that wider networks improve overall performance.
 This behaviour is typical up to a point, as wider networks have greater capacity to model complex patterns.
 However, it is also known that increasing a network's width beyond a certain point, results in either overfitting or reducing performance gains.
@@ -197,13 +199,13 @@ which maintained non-zero gradients throughout the network, enabling learning.
 \begin{figure}[t]
     \centering
     \begin{subfigure}{\linewidth}
-        \includegraphics[width=\linewidth]{figures/acc_curve_width.png}
+        \includegraphics[width=\linewidth]{figures/width_acc}
         \caption{accuracy by epoch}
         \label{fig:width_acccurves}
     \end{subfigure} 
     \begin{subfigure}{\linewidth}
         \centering
-        \includegraphics[width=\linewidth]{figures/error_curve_width_relu}
+        \includegraphics[width=\linewidth]{figures/width_error}
         \caption{error by epoch}
         \label{fig:width_errorcurves}
     \end{subfigure} 
@@ -221,13 +223,13 @@ which maintained non-zero gradients throughout the network, enabling learning.
 \begin{figure}[t]
     \centering
     \begin{subfigure}{\linewidth}
-        \includegraphics[width=\linewidth]{figures/acc_curve_depth.png}
+        \includegraphics[width=\linewidth]{figures/depth_acc}
         \caption{accuracy by epoch}
         \label{fig:depth_acccurves}
     \end{subfigure} 
     \begin{subfigure}{\linewidth}
         \centering
-        \includegraphics[width=\linewidth]{figures/error_curve_depth_relu}
+        \includegraphics[width=\linewidth]{figures/depth_error}
         \caption{error by epoch}
         \label{fig:depth_errorcurves}
     \end{subfigure} 
@@ -243,13 +245,13 @@ which maintained non-zero gradients throughout the network, enabling learning.
 \begin{figure*}[t]
     \centering
     \begin{subfigure}{.475\linewidth}
-        \includegraphics[width=\linewidth]{figures/dropout_plot.png}
+        \includegraphics[width=\linewidth]{figures/dropout_plot}
         \caption{Accuracy and error by inclusion probability.}
         \label{fig:dropoutrates}
     \end{subfigure} 
     \begin{subfigure}{.475\linewidth}
         \centering
-        \includegraphics[width=\linewidth]{figures/wd_plot.png}
+        \includegraphics[width=\linewidth]{figures/wd_plot}
         \caption{Accuracy and error by weight penalty.}
         \label{fig:weightrates}
     \end{subfigure} 
