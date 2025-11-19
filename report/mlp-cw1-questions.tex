@@ -37,7 +37,10 @@ then hits a limit very quickly, while validation error’s slope turns from nega
 %% Question 2:
 %    Question 2 - Present your network width experiment results by using the relevant figure and table}
 \newcommand{\questionTwo} {
-\youranswer{
+\youranswer{the model with 128 hidden units overfits. This can be seen clearly in Figure 2a, as it's validation error increases
+consistently from epoch 10 onwards. The model with 64 units, begins to slightly overfit from epochs 25 onwards. Whereas
+width 32 doesn't display obvious signs of overfitting, except that it's gneralisation gap increases very slightly over
+the epochs.
 %the best validation accuracy occurs at with
 %Using Figure 2a–b and Table 1, the best validation accuracy occurs at width __ with val. acc. ____.
 %Training/validation errors at this width are ____/____, yielding a generalisation gap of ____.
@@ -53,7 +56,17 @@ then hits a limit very quickly, while validation error’s slope turns from nega
 %% Question 3:
 %    Question 3 - Discuss whether varying width affects the results in a consistent way, and whether the results are expected and match well with the prior knowledge (by which we mean your expectations as are formed from the relevant Theory and literature)}
 \newcommand{\questionThree} {
-\youranswer{
+\youranswer{For the parameters we have fixed, increasing the width from size 32 to 64 increases the validation accuracy
+and decreases the validation loss. However, increasing the width further from size 64 to 128 decreases the validation
+accuracy and increases the validation loss. Therefore, our model which overfits the least is the width size 64. This
+observation is supported by literature, where if the model's width is too small it's model capacity cannot effectively
+model the signal of the data, and if it's width is too large it's capacity is too large and begins to overfit
+the data's noise.
+
+This suggests that there is a sweet spot for the width. This is backed up
+from general literature, which states that if a model's width is too small it cannot effectively model the signal of
+data, but if the width is too large it begins to overfit the noise of the data, as it's extra capacity
+    This suggests for the parameters fixed, increasing width size has a
 %From Figure 2 and Table 1, models with widths __ and __ overfit (generalisation gap increases by ____),
 %whereas widths __ and __ show smaller/stable gaps of ____. Overall, increasing width ____ validation accuracy
 %(best at width __: ____) but ____ overfitting beyond width __. This trend is (consistent/inconsistent) with expectations
@@ -75,31 +88,15 @@ Figure 3b, as the validation error for 2 and 3 starts to increase from epoch 20 
 %% Question 5:
 \newcommand{\questionFive} {
 \youranswer{This data suggests for the parameters fixed, increasing the depth of the model reduces generalisation but
-icreases validation accuracy. We can see in Figure 3a, that after 100 epochs, the model with depth 3 has the largest
-validation accuracy. Whilst, we can see from Figure 3b, that depth 1 model overfits the least, as it's generalisation
-gap remains much smaller than the other depths throughout the epochs. (Cite here), Surrounding literature supports
-these results. As models with greater depth can model more complex non linear patterns
+icreases validation accuracy. We can see in Figure 3a, that after 100 epochs, the model with depth 4 has the largest
+validation accuracy. Whilst, we can see from Figure 3b, that the depth 2 model overfits the least, as it's generalisation
+gap remains much smaller than the other depths throughout the epochs.
 
-
-We know from the surrouding literature, that a depth two model with a large enough width, can model any continuous function.
-This suggests why the validation accuracy for depths 2 and 3 are much larger.
-However, models with larger depths have larger model capacity and therefore can model more complex patterns.
+We know from the surrounding literature that a model with 2 hidden layers is a universal approximator, being able to
+model any continuous function with a larger enough width. This suggests why the validation accuracy for depths 2 and 3
+are much larger. However, models with larger depths have larger model capacity and therefore can model more complex patterns.
 But, on the flip side they also can lead to model fitting the noise of the data. Therefore, in the bias variance tradeoff
 overfits the noise, making it generalise less.
-
-However,
-
-The literature
-
-    This data suggests that for the parameters we have fixed, increasing the depth of the model hinders
-generalisation.
-
-
-Varying depth shows that validation accuracy ____ from depth __ to __ by ____, while the generalisation gap ____ at
-deeper models (depth __ gap __ vs depth __ gap __). This suggests (benefit/plateau/overfitting) beyond depth __.
-These results (do/do not) match expectations from theory and prior work, where additional depth can improve
-representation capacity up to a point, after which optimisation difficulty or overfitting may dominate.
-The best validation accuracy is depth __ (acc __), while the least overfitting model is depth __ (gap __).
 }
 }
 
@@ -107,7 +104,56 @@ The best validation accuracy is depth __ (acc __), while the least overfitting m
 %% Question 6:
 %    Question 6 - Explain how one could use a combination of L1 and L2 regularisation. Discuss any potential benefits of this approach. Present an equation for this combined loss function and explain all relevant variables and hyperparameters.}
 \newcommand{\questionSix} {
-\youranswer{
+\youranswer{We combine the L1 and L2 penalties together by adding them both to the loss function. By supplying a
+coefficient alpha we can balance between the sparsity of L1 and the smoothing of L2. This can be implemented by
+wrapping our loss function like the equation below:
+
+\[
+L_{\text{total}}
+= L_{\text{data}}
++ \lambda_{1}\|w\|_{1}
++ \lambda_{2}\|w\|_{2}^{2},
+\]
+
+\begin{itemize}
+    \item \( L_{\text{total}} \): The total loss the optimiser is minimising.
+    \item \( L_{\text{data}} \): The loss produced from the data (e.g.\ cross-entropy or MSE).
+    \item \( w \): Vector of the model weights.
+    \item \( \|w\|_{1} \): L1 term, promoting sparsity.
+    \item \( \|w\|_{2}^{2} \): L2 term, encourages smoother weights.
+    \item \( \lambda_{1} \): Strength of the L1 regularisation term.
+    \item \( \lambda_{2} \): Strength of the L2 regularisation term.
+\end{itemize}
+
+
+This approach was used by (Cite here).
+
+This mixed approach may be used in order to counteract the negative effectives of each regulariser. For example, L1 in
+some cases can lead to the lesser of highly correlated features being driven to 0 even though it contains useful information.
+This can lead to model instability. On the other hand, L2 can sometimes retain completely useless features that
+would be better zeroed out. Thereby combining the two we can stop model instability and reduce unimportant features.
+
+
+This mix approach
+
+by adding both penalties to the loss function. By supplying each with
+a coefficient we can determine how much each contributes to the overall objective. This balances between the sparsity
+of L1 and the shrinkage of L2. We posit that this could provide potneti
+Potentially yielding better generalisation
+
+
+We can combine L1 and L2 regularisation into a single regulariser by introducing a separate parameter for each
+regularising term. L1 encourages sparsity by penalising the absolute magnitude of the weights,
+while L2 smooths the weights by penalising large weights more strongly through their squared magnitude.
+
+This combined regulariser could provide a flexible balance between weight sparsity and weight smoothness,
+whilst reducing the negative consequences of each individual regulariser. For example:
+L2 can prevent L1 from discarding weaker correlated weights making the model more stable,
+whilst L1 provides the ability to eliminate truly irrelevant weights that L2 may maintain.
+
+
+
+
 %We combine L1 and L2 by adding both penalties to the objective with separate coefficients.
 %This balances sparsity (L1) and weight shrinkage/smoothing (L2), potentially yielding better generalisation than
 %either alone. A common form is:
@@ -127,6 +173,21 @@ The best validation accuracy is depth __ (acc __), while the least overfitting m
 %    Question 7 - Assume you had a limited experiment budget for exactly \textbf{4} experiment runs dedicated to testing the effectiveness of your proposed combination of L1 and L2 Regularization in Section~\ref{sec:L1L2combo}. Argue for which 4 configurations to run based on any previous results or other information you consider relevant. Run those experiments and add the results in Table~4 and Figure~5 (you will then discuss those results alongside all others in the next question below).
 \newcommand{\questionSeven} {
 \youranswer{
+Due to limited experimental budget of four runs, we focused on the interaction between L1 and L2 rather than
+just finding a single “best” setting. From our earlier tests, both L1 and L2 have useful ranges around 1e-13–1e-9,
+with performance peaking near 1e-11 and degrading when too large.
+Guided by that, we probed two balanced points and two asymmetric points to test whether gains are driven primarily by one term or if a complementary effect emerges.
+
+    Specifically, we ran:
+    \begin{itemize}
+        \item Balanced small: \(\lambda_1=1\text{e-}11,\ \lambda_2=1\text{e-}11\) — tests a minimal joint penalty near each method’s individual sweet spot.
+        \item Balanced moderate: \(\lambda_1=1\text{e-}09,\ \lambda_2=1\text{e-}09\) — tests whether increasing both together maintains or improves generalisation.
+        \item Stronger L1: \(\lambda_1=1\text{e-}09,\ \lambda_2=1\text{e-}11\) — tests if L1 drives most of the benefit with only a small L2 for smoothing.
+        \item Stronger L2: \(\lambda_1=1\text{e-}11,\ \lambda_2=1\text{e-}09\) — tests if additional L2 helps when L1 is kept small.
+    \end{itemize}
+
+    This set stays within the four-run budget while answering a clearer question: do we see synergy between L1 and L2, or does one term dominate? Using balanced vs asymmetric pairs lets us attribute any improvement to either interaction effects or to a single regulariser, and the chosen magnitudes reflect the effective region indicated by our prior results.
+
 %    With a 4-run budget, I target whether L1–L2 interactions help beyond each alone. Based on prior singles (best L1 at __, best L2 at __), I propose: (1) balanced small \(\lambda_1=__,\lambda_2=__\); (2) balanced moderate \(\lambda_1=__,\lambda_2=__\); (3) stronger L1 \(\lambda_1=__,\lambda_2=__\); (4) stronger L2 \(\lambda_1=__,\lambda_2=__\). This probes synergy vs dominance. The question answered is “Do small L2 terms stabilise sparse L1 solutions (or vice versa)?” and this design is justified by __ (evidence from Table 3/Figure 4 and literature __).}
 }
 }
@@ -134,7 +195,24 @@ The best validation accuracy is depth __ (acc __), while the least overfitting m
 
 %% Question 8:
 \newcommand{\questionEight} {
-\youranswer{
+\youranswer{All the regularisation methods help to reduce overfitting to varying degrees. However, we can see that for
+method there is a point that once cross degrades performace significiantly. From our results, we can see that \_ with a
+parameters value of \_ provides the greatest validation accuracy of \_. Additionally, we can see the method that has
+overfit the least is \_, with a generalisation gap of \_ - \_ = \_. Comparing these methods to the baseline and soft
+labelled baseline we can conclude that \_. Comparing L1 and L2 regularisation, we can conclude for the parameters tested
+\_ is a better regularisation method for accuracy and \_ is the least overfit regularisation method. Overall, we can
+conclude that overfitting is being tackled by \_. Furthermore, we can conclude that ther \_, between validation accuracy
+and generalisation gap, this suggests that \_. Overall, our best performing model is \_. (Citation about this)
+
+
+
+
+From a gen
+as it provides greatest validation accuracy and lowest validation
+
+For each regularisation
+ method, we can see that beyond a point increasing it's parameter size can hamper
+
 %    Setup: optimiser __, lr __, batch size __, epochs __, architecture __, and L1/L2 ranges __/__.
 %Results (Table 4, Figure 5): best combined model is \(\lambda_1=__,\lambda_2=__\) with val. acc __ and gap __.
 %Compared to baseline (val. acc __, gap __) and single-regularisers (best L1: __ at __; best L2: __ at __),
@@ -148,12 +226,15 @@ The best validation accuracy is depth __ (acc __), while the least overfitting m
 %% Question 9:
 %    Question 9 - A colleague proposed using a custom activation function (which can be identified as CustomActivationLayer() in your Coursework\_1.ipynb notebook and the mlp package). Run the prepared experiment in the "Problematic Training" cell in the Coursework\_1.ipynb notebook, and display the results in Figure~6. Analyse the results. Is the model overfitting? Explain the cause of the problematic performance of the model?
 \newcommand{\questionNine} {
-\youranswer{
-%Using the custom activation \(f(x)=__\), training/validation accuracies plateau at __/__, indicating
-%(underfitting/overfitting). Figure 6 shows accuracy/error curves that ____ and gradient flow that ____
-%(e.g., vanishing in deeper layers). The likely cause is __ (e.g., output range compression leading to small derivatives),
-%which yields gradients of magnitude __ around __, preventing effective learning. Replacing with __ (e.g., ReLU)
-%restores non-zero gradients and learning.
+\youranswer{A colleuage proposed running a depth 5 model with using his proposed custom activation function
+$( f(x) = \frac{1}{10(1 + e^{-x})} )$. Our experiments resulted in severe underfitting. This can be seen clearly in
+Figure 6c, which shows the gradients plumet during backpropagation in the layers near the output. Additionally, Figure
+6a and 6b shows the model fails to become accurate and maintains a high error. This poor performance is directly linked
+to the activation function, which is essentially a scaled sigmoid which ouputs to the narrow range ((0, 0.1)). This
+scaling compresses activations so strongler that the gradients become extremely small, causing the vanishing gradients
+early in backpropagation. As such the network's weights receive neglible updates, preventing effective learning.
+In contrast, we repeated this experiment by swapping back to a standard ReLU activation, which maintained non-zero gradients
+throughout the network, enabling learning.
 }
 }
 
@@ -162,7 +243,14 @@ The best validation accuracy is depth __ (acc __), while the least overfitting m
 
 %% Question 10:
 \newcommand{\questionTen} {
-\youranswer{
+\youranswer{Overall we can conclude that \_. Our results are generally supported by the surrounding literature, \_.
+however we. We found that (L1/L2 or dropout) \_ helped effectively with overfitting, whilst \_ was less so.
+In the future we are intersted in testing \_ to improve regularisation, as literature (cite here) has suggested that
+this is an effective regulariser, especially when \_.
+
+We note that network capacity is essential to determining whether a model will overfit. The greater the capacity a
+model has, the more likely it is to overfit.
+
 %Takeaways: (1) Width: best at __ (acc __), with overfitting emerging at __; (2) Depth: best at __ (acc __), gap __;
 %(3) Regularisation: best single is __ at __, combination L1/L2 at (__,__) yields __; (4) Label smoothing/Dropout/Weight
 %decay effects: __. These align with prior work __, with deviations __. Recommendation: for this task,
@@ -314,9 +402,9 @@ The best validation accuracy is depth __ (acc __), while the least overfitting m
     \toprule
         \# Hidden Units & Val. Acc. & Train Error & Val. Error\\
     \midrule
-    32 & 0.751 & 0.788 & 0.819 \\
-    64 & 0.799 & 0.579 & 0.637 \\
-    128 & 0.830 & 0.420 & 0.522 \\
+    32   &   0.583   &   1.633   &   1.787   \\
+    64   &   0.666   &   1.087   &   1.365   \\
+    128   &   0.604   &   1.172   &   1.721   \\
     \bottomrule
     \end{tabular}
     \caption{Validation accuracy (\%) and training/validation error (in terms of cross-entropy error) for varying network widths on the EMNIST dataset.}
