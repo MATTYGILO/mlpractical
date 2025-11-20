@@ -29,7 +29,7 @@
 \youranswer{the training accuracy increases steadily, while validation accuracy reaches a maximum of ~83\% at epoch
 12 and then steadily decreases thereafter. We see in figure 1b that the training error decreases throughout,
 while validation error reaches a minimum of ~0.5 at epoch 10 and then increases at a steady rate.
-Overfitting begins around epoch 12, where the generalisation gap (val. error − train error) increases significiently
+Overfitting begins around epoch 12, where the generalisation gap (val. error $-$ train error) increases significiently
 at a continued rate. Considering curve velocities, accuracy increases most rapidly during epochs 0 – 8,
 then hits a limit very quickly, while validation error’s slope turns from negative to positive at epoch 10.}
 }
@@ -50,45 +50,26 @@ the epochs.
 %% Question 3:
 %    Question 3 - Discuss whether varying width affects the results in a consistent way, and whether the results are expected and match well with the prior knowledge (by which we mean your expectations as are formed from the relevant Theory and literature)}
 \newcommand{\questionThree} {
-\youranswer{For the parameters we have fixed, increasing the width from size 32 to 64 increases the validation accuracy
-and decreases the validation loss. However, increasing the width further from size 64 to 128 decreases the validation
-accuracy and increases the validation loss. The best validation accuracy is achieved at width 64 (66.6\%), whilst
-the model that overfit the least was width 32 as it has the smalles generalisation gap of 0.154. This suggests that
-as width increases and thus model capacity increases overfitting increases. This is supported by the general literature
-that although increase capacity allows for more complex patterns to be model and can improve validationa accuracy. It
-has the potential negative consequence of increasing overfitting.
+\youranswer{For the parameters tested, increasing the width from 32 to 64 improves performance: the validation accuracy
+rises and the validation loss decreases. However, increasing width further to 128 reverses this trend, with both a drop
+in validation accuracy and an increase in validation loss. The best validation accuracy (66.6\%) occurs at width 64.
+The model that overfits the least is width 32, which has the smallest generalisation gap of 0.154.
 
-with smallest generalisation gap (thus least overfit) is achieved by width 32.
-
-the wi
-width 32 overfits the least (smallest generalisation gap).
-
-
-Therefore, our model overfits the least with a width of 64. This
-observation is supported by Goodfellow et al. \cite{goodfellow2013maxout}
-literature, where if the model's width is too small, its model capacity cannot effectively
-model the signal of the data, and if its width is too large its capacity is too large and begins to overfit
-the data's noise.
-
-This suggests that there is a sweet spot for the width. This is backed up
-from general literature, which states that if a model's width is too small it cannot effectively model the signal of
-data, but if the width is too large it begins to overfit the noise of the data, as it's extra capacity
-    This suggests for the parameters fixed, increasing width size has a
-%From Figure 2 and Table 1, models with widths __ and __ overfit (generalisation gap increases by ____),
-%whereas widths __ and __ show smaller/stable gaps of ____. Overall, increasing width ____ validation accuracy
-%(best at width __: ____) but ____ overfitting beyond width __. This trend is (consistent/inconsistent) with expectations
-%from capacity arguments and prior literature (e.g., wider MLPs can fit more complex patterns, risking overfitting
-%without sufficient regularisation). The least overfitting model is width __ (gap __), while the highest validation
-%accuracy is width __ (acc __), which are/are not the same.
+This pattern is consistent with expectations from the literature. Increasing width expands model capacity, which
+initially helps capture the underlying signal, improving validation accuracy. Beyond a certain point, however, the
+additional capacity enables the model to fit noise, increasing overfitting and reducing validation performance.
+Width 64 appears to strike the balance in this experiment: large enough to model the structure in the data,
+    but not so large that it destabilises generalisation. Width 32, while less accurate, generalises the most reliably.
 }
 }
 
 %% Question 4:
 %    Question 4 - Present your network depth experiment results by using the relevant figure and table}
 \newcommand{\questionFour} {
-\youranswer{all the models display some degree of overfitting, as the generalisation gap for all the models increases
-across the epochs. However, this is most prevelant in the models with depth 2 and 3. This, can be seen clearly in
-Figure 3b, as the validation error for 2 and 3 starts to increase from epoch 20 onwards.
+\youranswer{All models show some degree of overfitting, as each displays an increasing generalisation gap across the
+epochs. This is most evident in the models with depths 2 and 3. In Figure 3b, their validation error begins to rise from
+around epoch 20 onwards, indicating that they start to diverge from the training curve earlier and more noticeably than
+the deeper models.
 }
 }
 
@@ -234,7 +215,13 @@ This conclusion is supported by prior work showing that dropout can be interpret
 as an adaptive form of L2 regularisation, and that both methods act to limit
 co-adaptation and excessive weight growth while improving generalisation.
 \cite{srivastava2014dropout,wager2013dropout,phaisangittisagul2016regularization,cavazza2018dropout}. Our combined
-L1L2 regularisation interestingly produced the best generalisation gap at 0.006 suggesting it is the most effective
+L1L2 regularisation experiments resulted suggest two conclusions. First, that balancing L1 and L2 parameters results
+in an overall low generalisation gap and increased validation accuracy. The second is that using a larger L1 when
+combined with L2 results in a greater validation accuracy, but also a larger error rate. This suggests that, when
+selecting either L1 or L2 to be larger we must make a decision between validation accuracy and generalisation gap.
+Interestingly, a larger L1 parameter produces a higher validation accuracy than L2 is an interesting result as
+our earlier individual experiments showed that L2 on the whole had a higher accuracy than L1 for these parameter values.
+Interestinly our L1L2 regularisation interestingly produced the best generalisation gap at 0.006 suggesting it is the most effective
 technique for reducing overfitting whilst maintaining reasonable accuracy. However, it's validation accuracy
 is still lower than L2 best parameter and many of the Dropout parameters. This suggests that whilst combining
 L1 and L2 regularisation can effectively reduce overfitting, it does not necessarily lead to the best accuracy.
@@ -368,7 +355,7 @@ model has, the more likely it is to overfit.
     \end{subfigure} 
     \begin{subfigure}{.475\linewidth}
         \centering
-        \includegraphics[width=\linewidth]{figures/wd_plot}
+        \includegraphics[width=\linewidth]{figures/l2_plot}
         \caption{Accuracy and error by weight penalty.}
         \label{fig:weightrates}
     \end{subfigure} 
@@ -385,26 +372,15 @@ model has, the more likely it is to overfit.
 \begin{figure*}[t]
     \centering
     \begin{subfigure}{.475\linewidth}
-        \includegraphics[width=\linewidth]{figures/l1_1e-11_l2_1e-11_acc_gen_gap}
-        \caption{Balance Small L1L2 Regularisation}
-        \label{fig:balancedsmallreg}
+        \includegraphics[width=\linewidth]{figures/q5_all_l1l2_valacc}
+        \caption{Validation Accuracy Across L1L2 Configurations}
+        \label{fig:L1L2valacc}
     \end{subfigure}
     \begin{subfigure}{.475\linewidth}
-        \includegraphics[width=\linewidth]{figures/l1_1e-09_l2_1e-09_acc_gen_gap}
-        \caption{Balance Small L1L2 Regularisation}
-        \label{fig:balancedmoderatereg}
+        \includegraphics[width=\linewidth]{figures/q5_all_l1l2_gengap}
+        \caption{Generalisation Gap Across L1L2 Configurations}
+        \label{fig:L1L2gengap}
     \end{subfigure}
-    \begin{subfigure}{.475\linewidth}
-        \includegraphics[width=\linewidth]{figures/l1_1e-09_l2_1e-11_acc_gen_gap}
-        \caption{Stronger L1 Regularisation}
-        \label{fig:strongerl1}
-    \end{subfigure}
-    \begin{subfigure}{.475\linewidth}
-        \includegraphics[width=\linewidth]{figures/l1_1e-11_l2_1e-09_acc_gen_gap}
-        \caption{Stronger L2 Regularisation}
-        \label{fig:strongerl2}
-    \end{subfigure}
-    \label{fig:l1l2regs}
 \end{figure*}
 }
 }
@@ -417,13 +393,13 @@ model has, the more likely it is to overfit.
 \begin{figure}[t]
     \centering
     \begin{subfigure}{\linewidth}
-        \includegraphics[width=\linewidth]{figures/acc_custom_activation_curve.png}
+        \includegraphics[width=\linewidth]{figures/custom_activation_acc}
         \caption{accuracy by epoch}
         \label{fig:custom_act_acccurves}
     \end{subfigure}
     \begin{subfigure}{\linewidth}
         \centering
-        \includegraphics[width=\linewidth]{figures/error_custom_activation_curve}
+        \includegraphics[width=\linewidth]{figures/custom_activation_error}
         \caption{error by epoch}
         \label{fig:custom_act_errorcurves}
     \end{subfigure}
