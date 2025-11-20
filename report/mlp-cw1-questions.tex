@@ -267,10 +267,12 @@ throughout the network, enabling learning.
 Overall, the experiments show that model capacity and regularisation strongly influence generalisation.
 Increasing width or depth improves accuracy only up to a point; beyond that, extra capacity widens the generalisation
 gap, matching the expected capacity–overfitting relationship in the literature. Among the regularisation methods,
-Dropout was the most effective: an inclusion rate of 0.85 achieved the highest validation accuracy and the smallest gap
-among the highest-performing models (\gt 0.8). L2 regularisation also reliably reduced overfitting, whereas L1 only
-helped reduce the generalisation gap at very small magnitudes and caused severe underfitting when too strong—consistent
-with its tendency to eliminate useful weights.
+Dropout was the most effective: an inclusion rate of 0.85 achieved the highest validation accuracy. Meanwhile the
+combined L1L2 regularisation yielded the lowest generalisation gap amognst whilst maintaining reasonable accuracy.
+among the highest-performing models (\gt 0.8). L2 regularisation also reliably reduced overfitting and improved overall
+validation accuracy, whereas L1 only helped reduce the generalisation gap at very small magnitudes and caused severe
+underfitting when too strong—consistent with its tendency to eliminate useful weights. The combined L1L2 regulariser's
+results suggest that it is the most effective
 
 After reviewing recent regularisation techniques, the author identified Sharpness-Aware Minimisation (SAM)
 \cite{foret2021sharpness} as a particularly promising approach. In future work, we would like to evaluate it's
