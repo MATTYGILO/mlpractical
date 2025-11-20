@@ -233,7 +233,12 @@ regularisation which leads to the smoothing of weights, which results in a sprea
 This conclusion is supported by prior work showing that dropout can be interpreted
 as an adaptive form of L2 regularisation, and that both methods act to limit
 co-adaptation and excessive weight growth while improving generalisation.
-\cite{srivastava2014dropout,wager2013dropout,phaisangittisagul2016regularization,cavazza2018dropout}.
+\cite{srivastava2014dropout,wager2013dropout,phaisangittisagul2016regularization,cavazza2018dropout}. Our combined
+L1L2 regularisation interestingly produced the best generalisation gap at 0.006 suggesting it is the most effective
+technique for reducing overfitting whilst maintaining reasonable accuracy. However, it's validation accuracy
+is still lower than L2 best parameter and many of the Dropout parameters. This suggests that whilst combining
+L1 and L2 regularisation can effectively reduce overfitting, it does not necessarily lead to the best accuracy.
+
 }
 }
 
@@ -529,10 +534,10 @@ Question Table 4 - Add a table with the results from your 4 experiments (by whic
     \toprule
     \ L1 Coefficient & L2 Coefficient & Val. Acc. & Train Error & Val. Error \\
     \midrule
-    5e-4   &   5e-4   &   0.772   &   0.775   &   0.781   \\
-    5e-4   &   1e-3   &   0.759   &   0.883   &   0.889   \\
-    1e-3   &   5e-4   &   0.690   &   1.135   &   1.154   \\
-    1e-3   &   1e-3   &   0.664   &   1.287   &   1.305   \\
+    5e-4   &   5e-4   &   0.772   &   0.775   &   0.781   \\ % gen gap = 0.006
+    5e-4   &   1e-3   &   0.759   &   0.883   &   0.889   \\ % gen gap = 0.006
+    1e-3   &   5e-4   &   0.690   &   1.135   &   1.154   \\ % gen gap = 0.019
+    1e-3   &   1e-3   &   0.664   &   1.287   &   1.305   \\ % gen gap = 0.018
     \bottomrule
     \end{tabular}
 \end{table*}
