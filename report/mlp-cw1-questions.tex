@@ -75,16 +75,15 @@ the deeper models.
 
 %% Question 5:
 \newcommand{\questionFive} {
-\youranswer{This data suggests for the parameters fixed, increasing the depth of the model reduces generalisation but
-icreases validation accuracy. We can see in Figure 3a, that after 100 epochs, the model with depth 4 has the largest
-validation accuracy. Whilst, we can see from Figure 3b, that the depth 2 model overfits the least, as it's generalisation
-gap remains much smaller than the other depths throughout the epochs.
+\youranswer{For the parameters tested, increasing depth improves validation accuracy but reduces generalisation. Figure 3a shows
+that, after 100 epochs, the depth-4 model achieves the highest validation accuracy. Conversely, Figure 3b shows that the
+depth-2 model overfits the least, maintaining the smallest generalisation gap across the training run.
 
-We know from the surrounding literature that a model with 2 hidden layers is a universal approximator, being able to
-model any continuous function with a larger enough width. This suggests why the validation accuracy for depths 2 and 3
-are much larger. However, models with larger depths have larger model capacity and therefore can model more complex patterns.
-But, on the flip side they also can lead to model fitting the noise of the data. Therefore, in the bias variance tradeoff
-overfits the noise, making it generalise less.
+These results match expectations from the literature. A network with two hidden layers is already a universal
+approximator, provided sufficient width, which explains why depths 2 and 3 achieve strong baseline performance.
+However, additional depth increases model capacity further, enabling the network to capture more complex structure—but
+also making it more prone to fitting noise. This aligns with the bias–variance trade-off: deeper networks can model
+richer functions but at the cost of greater overfitting unless regularised appropriately.
 }
 }
 
@@ -93,8 +92,8 @@ overfits the noise, making it generalise less.
 %    Question 6 - Explain how one could use a combination of L1 and L2 regularisation. Discuss any potential benefits of this approach. Present an equation for this combined loss function and explain all relevant variables and hyperparameters.}
 \newcommand{\questionSix} {
 \youranswer{We combine the L1 and L2 penalties together by adding them both to the loss function. By supplying a
-coefficient alpha we can balance between the sparsity of L1 and the smoothing of L2. This can be implemented by
-wrapping our loss function like the equation below:
+coefficient alpha, we can balance between the sparsity of L1 and the smoothing of L2. This can be implemented by
+wrapping our standard loss function like the equation below:
 
 \[
 L_{\text{total}}
@@ -113,53 +112,18 @@ L_{\text{total}}
     \item \(\|w\|_{2}^{2}\): L2 penalty, encouraging smoother and smaller weights.
     \item \(\lambda\): The overall regularisation strength that scales the combined penalty.
     \item \(\alpha \in [0,1]\): Balancing coefficient controlling the mix of L1 and L2.
-        \begin{itemize}
-            \item \(\alpha = 1\): Pure L1 regularisation.
-            \item \(\alpha = 0\): Pure L2 regularisation.
-        \end{itemize}
     \item \(1 - \alpha\): Complementary weight ensuring the two penalties sum cleanly.
 \end{itemize}
 
+The additional hyperparameter \(\alpha\), is important because it directly controls the trade-off between sparsity and
+smoothness. The literature supports this reasoning: Ng~\cite{ng2004feature} shows that L1 is more
+aggressive than L2 in driving weights to zero, especially when features are correlated, while Goodfellow et
+al.~\cite{Goodfellow-et-al-2016} discuss how L2 regularisation stabilises optimisation by discouraging large weights.
+Combining L1 and L2 therefore allows us to retain the advantages of both. L1 can remove genuinely irrelevant weights,
+while L2 prevents overly aggressive elimination of correlated but still informative parameters.
 
-
-This approach was used by (Cite here).
-
-This mixed approach may be used in order to counteract the negative effectives of each regulariser. For example, L1 in
-some cases can lead to the lesser of highly correlated features being driven to 0 even though it contains useful information.
-This can lead to model instability. On the other hand, L2 can sometimes retain completely useless features that
-would be better zeroed out. Thereby combining the two we can stop model instability and reduce unimportant features.
-
-
-This mix approach
-
-by adding both penalties to the loss function. By supplying each with
-a coefficient we can determine how much each contributes to the overall objective. This balances between the sparsity
-of L1 and the shrinkage of L2. We posit that this could provide potneti
-Potentially yielding better generalisation
-
-
-We can combine L1 and L2 regularisation into a single regulariser by introducing a separate parameter for each
-regularising term. L1 encourages sparsity by penalising the absolute magnitude of the weights,
-while L2 smooths the weights by penalising large weights more strongly through their squared magnitude.
-
-This combined regulariser could provide a flexible balance between weight sparsity and weight smoothness,
-whilst reducing the negative consequences of each individual regulariser. For example:
-L2 can prevent L1 from discarding weaker correlated weights making the model more stable,
-whilst L1 provides the ability to eliminate truly irrelevant weights that L2 may maintain.
-
-
-
-
-%We combine L1 and L2 by adding both penalties to the objective with separate coefficients.
-%This balances sparsity (L1) and weight shrinkage/smoothing (L2), potentially yielding better generalisation than
-%either alone. A common form is:
-%
-%\[ L_{\text{total}} = L_{\text{data}} + \lambda_{1}\,\|w\|_{1} + \lambda_{2}\,\|w\|_{2}^{2} \quad (\text{or } L_{\text{data}} + \alpha\,\|w\|_{1} + (1-\alpha)\,\|w\|_{2}^{2}) \]
-%
-%where \(L_{\text{data}}\) is __, \(w\) are model weights, and \(\lambda_{1},\lambda_{2}\) (or mixing \(\alpha\)) control
-%regularisation strength. This introduces an extra hyperparameter (____) whose choice matters because ____.
-%Prior work (e.g., __) motivates this combination and reports benefits such as ____ (e.g., sparsity with stability).
-%Compared to plain L1 or L2, the mix can ____ under ____ settings.
+This mixed approach could provide a more flexible and robust regulariser than using L1 or L2 alone, potentially leading
+to better generalisation performance depending on the structure of the data.
 }
 }
 
@@ -176,56 +140,60 @@ Guided by that, we probed two balanced points and two asymmetric points to test 
 
     Specifically, we ran:
     \begin{itemize}
-        \item Balanced small: \(\lambda_1=5\text{e-}4,\ \lambda_2=5\text{e-}4\) — tests a minimal joint penalty near each method’s individual sweet spot.
-        \item Balanced moderate: \(\lambda_1=1\text{e-}09,\ \lambda_2=5\text{e-}3\) — tests whether increasing both together maintains or improves generalisation.
-        \item Stronger L1: \(\lambda_1=5\text{e-}3,\ \lambda_2=5\text{e-}4\) — tests if L1 drives most of the benefit with only a small L2 for smoothing.
-        \item Stronger L2: \(\lambda_1=5\text{e-}4,\ \lambda_2=5\text{e-}3\) — tests if additional L2 helps when L1 is kept small.
+        \item Balanced small: \(\lambda_1=5\text{e-}4,\ \lambda_2=5\text{e-}4\) — tests a minimal joint penalty near each method’s individual sweet spot
+        \item Balanced moderate: \(\lambda_1=1\text{e-}09,\ \lambda_2=5\text{e-}3\) — tests a stronger joint penalty to see if combined effects scale
+        \item Stronger L1: \(\lambda_1=5\text{e-}3,\ \lambda_2=5\text{e-}4\) — tests the effect of a dominant L1 term
+        \item Stronger L2: \(\lambda_1=5\text{e-}4,\ \lambda_2=5\text{e-}3\) — tests the effect of a dominant L2 term
     \end{itemize}
 
-    This set stays within the four-run budget while answering a clearer question: do we see synergy between L1 and L2, or does one term dominate? Using balanced vs asymmetric pairs lets us attribute any improvement to either interaction effects or to a single regulariser, and the chosen magnitudes reflect the effective region indicated by our prior results.
-
+    This set stays within the four-run budget while answering a clearer question: do we see synergy between L1 and L2,
+    or does one term dominate? Using balanced vs asymmetric pairs lets us attribute any improvement to either
+    interaction effects or to a single regulariser, and the chosen magnitudes reflect the effective region indicated by
+    our prior results.
 }
 }
 
 
 %% Question 8:
 \newcommand{\questionEight} {
-\youranswer{All the regularisation methods help to reduce overfitting to varying degrees. However, we can see that for
-all methods, there is a point that once crossed degrades performace significiantly. From our results, we can see that
-Dropout with an inclusion rate of 0.97 provides the greatest validation accuracy of 84.9\%. Additionally, we can see
-the method that has overfit the least is the model using L1 parameter values of 5e-2 and 5e-3,
-resulting in a generalisation gap of 0. However, this statement is meaningless as the model has a validation accuracy of 2\% -
-which is equivalent to random chance (1/47 ~ 0.0213). If, however, we exclude all models with validation accuracy below
-70\% the least overfit model remains L1 regularisation but at a parameter of 5e-4, with a generalisation gap of
-0.824 - 0.810 = 0.014. This suggests that the smallest amount of sparsity may help reduce generalisation gap through
-means of zeroing out unimportant features. Comparing these methods to our baselines, we can conclude that regularisation
-methods can improve accuracy and reduce error so long as reasonable parameters are used.
-The only outlier which failed to improve on the baseline model's validation accuracy across all
-the parameters tested was L1 regularsation. Our soft label baseline of 0.1 reduces validation accuracy but has an
-improved generalisation gap at 0.156 compared to the baselines 0.242. This suggests that soft labels do reduce
-overfitting but can hamper accuracy. Comparing L1 and L2 regularisation, we can conclude that L2 is superior to L1 for parameters
-\gt 1e-3 resulting high validation accuracy and lower error rates. L2 is a better regularisation method for accuracy,
-however, as previously mentioned the smallest L1 parameters presents the best generalisation gap whilst maintain
-reasonable accuracy. Overall, we can conclude that overfitting (in terms of generalisation gap) is reduced
-across all regularisation methods and parameters tested. Our best performing model is when Dropout is employed
-with a parameter value of 0.85. This could suggest that our overfitting and lack of accuracy is due to an overeliance
-on certain units over others. This conclusion is further supported by the fact that second place is held by L2
-regularisation which leads to the smoothing of weights, which results in a spreading of reliance across hidden units.
-This conclusion is supported by prior work showing that dropout can be interpreted
-as an adaptive form of L2 regularisation, and that both methods act to limit
-co-adaptation and excessive weight growth while improving generalisation.
-\cite{srivastava2014dropout,wager2013dropout,phaisangittisagul2016regularization,cavazza2018dropout}. Our combined
-L1L2 regularisation experiments resulted suggest two conclusions. First, that balancing L1 and L2 parameters results
-in an overall low generalisation gap and increased validation accuracy. The second is that using a larger L1 when
-combined with L2 results in a greater validation accuracy, but also a larger error rate. This suggests that, when
-selecting either L1 or L2 to be larger we must make a decision between validation accuracy and generalisation gap.
-Interestingly, a larger L1 parameter produces a higher validation accuracy than L2 is an interesting result as
-our earlier individual experiments showed that L2 on the whole had a higher accuracy than L1 for these parameter values.
-Interestinly our L1L2 regularisation interestingly produced the best generalisation gap at 0.006 suggesting it is the most effective
-technique for reducing overfitting whilst maintaining reasonable accuracy. However, it's validation accuracy
-is still lower than L2 best parameter and many of the Dropout parameters. This suggests that whilst combining
-L1 and L2 regularisation can effectively reduce overfitting, it does not necessarily lead to the best accuracy.
+\youranswer{
+Across all experiments, each regularisation method reduces overfitting to some extent, but only for suitable
+hyperparameter values. Once these values become too large, performance degrades sharply. From our results, Dropout
+with an inclusion rate of $0.97$ achieves the highest validation accuracy at $84.9\%$. The least overfitting model in
+absolute terms is L1 regularisation with parameters $5\times10^{-2}$ and $5\times10^{-3}$, both producing a
+generalisation gap of $0$. However, this is misleading because the corresponding validation accuracy is only $2\%$,
+which is effectively random chance for a 47-class problem ($1/47 \approx 0.0213$). Excluding all models with validation
+accuracy below $70\%$, the smallest overfitting still occurs under L1 regularisation at $\lambda = 5\times10^{-4}$,
+with a generalisation gap of $0.014$ ($0.824 - 0.810$). This suggests that very mild sparsity may remove unhelpful
+weights without harming useful structure.
 
+Comparing all methods to the baselines, regularisation improves validation accuracy and reduces error whenever
+reasonable hyperparameter values are chosen. The main exception is L1, which fails to outperform the baseline at any of
+the tested values. Soft labelling ($\tau = 0.1$) lowers validation accuracy but improves the generalisation gap
+($0.156$ vs.\ the baseline’s $0.242$), indicating reduced overfitting at the expense of predictive performance.
+
+Comparing L1 and L2, L2 is consistently superior for $\lambda > 10^{-3}$, achieving higher validation accuracy and
+lower error rates. This aligns with established findings that L2 regularisation yields smoother optimisation behaviour
+and discourages extreme weight growth \cite{Goodfellow-et-al-2016,ng2004feature}. However, the smallest L1 values still
+produce the best generalisation gap among the single-regulariser experiments while retaining reasonable accuracy.
+
+Overall, overfitting is reduced by all methods tested, so long as the hyperparameters are not excessively large. The
+best-performing model in terms of accuracy is Dropout at $p = 0.85$, and this is further supported by the observation
+that the next-best method is L2, which smooths weights and distributes reliance across hidden units. This connection is
+consistent with the interpretation of dropout as a stochastic mechanism that limits co-adaptation and regulates weight
+growth in a way similar to L2 \cite{srivastava2014dropout}.
+
+The combined L1--L2 experiments produce two further conclusions. First, balancing L1 and L2 yields both low
+generalisation gaps and moderate-to-high validation accuracies. Second, favouring L1 within the combination increases
+validation accuracy but also increases error, indicating a trade-off between sparsity and stability. Notably, the
+best generalisation gap across all models ($0.006$) is achieved by an L1--L2 combination, suggesting that mixed
+regularisation is the most effective method for reducing overfitting while maintaining acceptable accuracy. However,
+its accuracy remains below the best L2 and Dropout settings, showing that reducing overfitting does not always
+translate into the highest predictive performance.
+
+Finally, the best-performing model (Dropout at $p = 0.85$) was trained and evaluated on the test set, achieving a test
+accuracy of $0.854$ and test error of $0.492$ (reported in Table~3). This confirms that the improvements observed during
+validation also translate to unseen data.
 }
 }
 
@@ -233,16 +201,28 @@ L1 and L2 regularisation can effectively reduce overfitting, it does not necessa
 %% Question 9:
 %    Question 9 - A colleague proposed using a custom activation function (which can be identified as CustomActivationLayer() in your Coursework\_1.ipynb notebook and the mlp package). Run the prepared experiment in the "Problematic Training" cell in the Coursework\_1.ipynb notebook, and display the results in Figure~6. Analyse the results. Is the model overfitting? Explain the cause of the problematic performance of the model?
 \newcommand{\questionNine} {
-\youranswer{A colleuage proposed running a depth 5 model with using his proposed custom activation function
-$( f(x) = \frac{1}{10(1 + e^{-x})} )$. Our experiments resulted in severe underfitting. This can be seen clearly in
-Figure 6c, which shows the gradients plumet during backpropagation in the layers near the output. Additionally, Figure
-6a and 6b shows the model fails to become accurate and maintains a high error. This poor performance is directly linked
-to the activation function, which is essentially a scaled sigmoid which ouputs to the narrow range ((0, 0.1)). This
-scaling compresses activations so strongler that the gradients become extremely small, causing the vanishing gradients
-early in backpropagation. As such the network's weights receive neglible updates, preventing effective learning.
-In contrast, we repeated this experiment by swapping back to a standard ReLU activation, which maintained non-zero gradients
-throughout the network, enabling learning.
+\youranswer{
+A colleague proposed training a depth-5 model using their custom activation function
+\(
+f(x) = \frac{1}{10(1 + e^{-x})}.
+\)
+Our experiment shows that the model is severely underfitting. Figure~6a and Figure~6b clearly show that the
+validation accuracy remains low and the validation error remains high throughout training, with no indication of the
+model learning meaningful structure. Figure~6c further confirms the cause: the gradients collapse in the upper layers of
+the network during backpropagation.
+
+This problematic behaviour is directly caused by the activation function itself. The proposed function is effectively a
+scaled sigmoid with outputs restricted to the extremely narrow range $(0, 0.1)$. These heavy compression forces
+activations to cluster tightly, producing gradients that are already very small even before backpropagation begins.
+During training, these gradients diminish further, resulting in a classic vanishing-gradient failure mode. Because the
+updates to the weights are negligible, the network cannot fit the data, leading to persistent underfitting.
+
+To verify this, we reran the experiment using a standard ReLU activation. In this case, gradients remained non-zero
+across the network and the model successfully learned. This demonstrates that the poor performance arises from the
+activation choice rather than the model depth or data. The issue can be resolved by replacing the custom activation with
+one that preserves gradient magnitude, such as ReLU or another non-saturating function.
 }
+
 }
 
 
@@ -251,55 +231,54 @@ throughout the network, enabling learning.
 %% Question 10:
 \newcommand{\questionTen} {
 \youranswer{
-Overall, the experiments show that model capacity and regularisation strongly influence generalisation.
-Increasing width or depth improves accuracy only up to a point; beyond that, extra capacity widens the generalisation
-gap, matching the expected capacity–overfitting relationship in the literature. Among the regularisation methods,
-Dropout was the most effective: an inclusion rate of 0.85 achieved the highest validation accuracy. Meanwhile the
-combined L1L2 regularisation yielded the lowest generalisation gap amognst whilst maintaining reasonable accuracy.
-among the highest-performing models (\gt 0.8). L2 regularisation also reliably reduced overfitting and improved overall
-validation accuracy, whereas L1 only helped reduce the generalisation gap at very small magnitudes and caused severe
-underfitting when too strong—consistent with its tendency to eliminate useful weights. The combined L1L2 regulariser's
-results suggest that it is the most effective
+Across all experiments, the results show that model capacity and regularisation are the primary factors determining
+generalisation. Increasing width or depth initially improves validation accuracy, but once the network becomes too
+large, the generalisation gap widens. This matches the expected capacity--overfitting behaviour outlined in
+\cite{Goodfellow-et-al-2016}, where larger networks can represent more complex structure but also fit noise more
+readily.
 
-After reviewing recent regularisation techniques, the author identified Sharpness-Aware Minimisation (SAM)
-\cite{foret2021sharpness} as a particularly promising approach. In future work, we would like to evaluate it's
-effectiveness in our setting. It works at the optimiser level instead of the loss function aim to select weights
-away from sharp regions.
-    seek to reproduce SAM and evaluate its effectiveness in our setting, where we …
+Across the regularisation methods tested, Dropout was the most consistently effective. An inclusion rate of $0.85$
+achieved the highest validation accuracy, which aligns with \cite{srivastava2014dropout}, where dropout is shown to
+reduce co-adaptation and encourage more robust representations. L2 regularisation also improved accuracy and reduced
+overfitting, consistent with the stabilising effect on weight magnitudes described in
+\cite{Goodfellow-et-al-2016,ng2004feature}. L1 regularisation only helped when the coefficient was very small; as
+\cite{ng2004feature} explains, larger L1 penalties aggressively zero correlated or moderately informative weights, which
+in our results led to severe underfitting. The combined L1--L2 regulariser produced the smallest generalisation gap in
+the entire study ($0.006$), demonstrating that mixing sparsity and smoothness can be highly effective for controlling
+overfitting even if it does not yield the top validation accuracy.
 
+Comparing Dropout-only with Weight-only approaches, the experimental results show that Dropout is superior for
+validation accuracy, whereas L2 and mild L1 excel at reducing the generalisation gap. This indicates that overfitting in
+our task arises from both excessive dependence on individual hidden units (addressed by Dropout) and uncontrolled weight
+growth (addressed by L2). Together, these results demonstrate that the different regularisers act on different failure
+modes, and that combining them can provide complementary benefits.
 
+Beyond the techniques tested, several additional approaches could be explored. Data augmentation and early stopping,
+both recommended in \cite{Goodfellow-et-al-2016}, are standard and effective mechanisms for reducing overfitting by
+either increasing the effective dataset size or halting training before memorisation occurs. These would provide
+natural extensions to the present study.
 
+Our strongest validation accuracy was achieved using Dropout, while the smallest generalisation gap came from the
+combined L1--L2 method. This raises an interesting future direction: whether we can achieve the strong accuracy of
+Dropout while maintaining the stability seen with L1--L2. One promising option is to investigate activation functions
+designed to pair well with Dropout, such as maxout \cite{goodfellow2013maxout}, which preserves gradient flow and may
+support higher accuracy without sacrificing generalisation. Another practical extension is to adopt stronger data
+augmentation pipelines or incorporate early stopping to further limit overfitting without altering the architecture.
 
-
-
-
-
-Some interesting research
-For fututer work we plan to emulate \cite{loshchilov2019decoupled} where they decouple L2 from the loss function.
-    As it has a tend
-and apply it as a seperate step on it's own
-
-Overall we can conclude that \_. Our results are generally supported by the surrounding literature, \_.
-however we. We found that (L1/L2 or dropout) \_ helped effectively with overfitting, whilst \_ was less so.
-In the future we are intersted in testing \_ to improve regularisation, as literature (cite here) has suggested that
-this is an effective regulariser, especially when \_.
-
-We note that network capacity is essential to determining whether a model will overfit. The greater the capacity a
-model has, the more likely it is to overfit.
-
-%Takeaways: (1) Width: best at __ (acc __), with overfitting emerging at __; (2) Depth: best at __ (acc __), gap __;
-%(3) Regularisation: best single is __ at __, combination L1/L2 at (__,__) yields __; (4) Label smoothing/Dropout/Weight
-%decay effects: __. These align with prior work __, with deviations __. Recommendation: for this task,
-%use __ with hyperparameters __, and explore future directions __ (e.g., early stopping, stronger data augmentation,
-%scheduling, or Bayesian ensembling).
+Overall, these findings reinforce that network capacity must be controlled deliberately. Both width and depth expand the
+hypothesis space, increasing the risk of overfitting, while the choice of regulariser determines how effectively this
+capacity is constrained. Our experiments show that Dropout, L2, and combined L1--L2 each target different dimensions of
+overfitting, emphasising the importance of matching the regularisation strategy to the architecture and the desired
+balance between accuracy and generalisation.
 }
 }
 
 %% - - - - - - - - - - - - FIGURES - - - - - - - - - - - - 
 
 %% Question Figure 2:
+%    Question Figure 2 - Replace the images in Figure 2 with figures depicting the accuracy and error, training and validation curves for your experiments varying the number of hidden units.
 \newcommand{\questionFigureTwo} {
-\youranswer{%    Question Figure 2 - Replace the images in Figure 2 with figures depicting the accuracy and error, training and validation curves for your experiments varying the number of hidden units.
+\youranswer{
 \begin{figure}[t]
     \centering
     \begin{subfigure}{\linewidth}
@@ -320,10 +299,10 @@ model has, the more likely it is to overfit.
 }
 
 %% Question Figure 3:
-\newcommand{\questionFigureThree} {
-\youranswer{}
 %    Question Figure 3 - Replace these images with figures depicting the accuracy and error, training and validation curves for your experiments varying the number of hidden layers.
 %
+\newcommand{\questionFigureThree} {
+\youranswer{}
 \begin{figure}[t]
     \centering
     \begin{subfigure}{\linewidth}
@@ -343,9 +322,9 @@ model has, the more likely it is to overfit.
 }
 
 %% Question Figure 4:
+%    Question Figure 4 - Replace these images with figures depicting the Validation Accuracy and Generalisation Gap (difference between validation and training error) for each of the experiment results varying the Dropout inclusion rate, and L1/L2 weight penalty depicted in Table 3 (including any results you have filled in).
 \newcommand{\questionFigureFour} {
 \youranswer{
-%    Question Figure 4 - Replace these images with figures depicting the Validation Accuracy and Generalisation Gap (difference between validation and training error) for each of the experiment results varying the Dropout inclusion rate, and L1/L2 weight penalty depicted in Table 3 (including any results you have filled in).
 \begin{figure*}[t]
     \centering
     \begin{subfigure}{.475\linewidth}
@@ -366,9 +345,9 @@ model has, the more likely it is to overfit.
 }
 
 %% Question Figure 5:
+%    Question Figure 5 - Add figures depicting the Validation Accuracy and Generalisation Gap (difference between validation and training error) for each of your 4 experiments  varying your hyperparameters for the combination of L1 and L2 regularisation (based on your implementation) depicted in Table 4.
 \newcommand{\questionFigureFive} {
 \youranswer{
-%    Question Figure 5 - Add figures depicting the Validation Accuracy and Generalisation Gap (difference between validation and training error) for each of your 4 experiments  varying your hyperparameters for the combination of L1 and L2 regularisation (based on your implementation) depicted in Table 4.
 \begin{figure*}[t]
     \centering
     \begin{subfigure}{.475\linewidth}
@@ -386,10 +365,9 @@ model has, the more likely it is to overfit.
 }
 
 %% Question Figure 6:
-\newcommand{\questionFigureSix} {
-
-\youranswer{
 %    Question Figure 6 - Add figures depicting the Training Accuracy, Error, and Gradient Flow Across Layers for the 1 experiment run with the Custom Activation function (produce these by running the "Problematic Training" cell in the Coursework\_1.ipynb notebook).
+\newcommand{\questionFigureSix} {
+\youranswer{
 \begin{figure}[t]
     \centering
     \begin{subfigure}{\linewidth}
@@ -439,10 +417,10 @@ model has, the more likely it is to overfit.
 }
 
 %% Question Table 2:
-\newcommand{\questionTableTwo} {
-\youranswer{
 %Question Table 2 - Fill in Table 2 with the results from your experiments varying the number of hidden layers.
 %
+\newcommand{\questionTableTwo} {
+\youranswer{
 \begin{table}[t]
     \centering
     \begin{tabular}{c|ccc}
@@ -461,9 +439,9 @@ model has, the more likely it is to overfit.
 }
 
 %% Question Table 3:
+%Question Table 3 - Fill in Table 3 with the results from your experiments for the missing hyperparameter values for each of L1 regularisation, L2 regularisation, Dropout and label smoothing (use the values shown on the table).
 \newcommand{\questionTableThree} {
 \youranswer{
-%Question Table 3 - Fill in Table 3 with the results from your experiments for the missing hyperparameter values for each of L1 regularisation, L2 regularisation, Dropout and label smoothing (use the values shown on the table).
 \begin{table*}[t]
     \centering
     \begin{tabular}{c|c|ccc}
@@ -504,8 +482,6 @@ model has, the more likely it is to overfit.
 %% Question Table 4:
 \newcommand{\questionTableFour} {
 \youranswer{
-Question Table 4 - Add a table with the results from your 4 experiments (by which we mean: 4 training runs, NOT 4 sets of experiments) varying your hyperparameters for the combination of L1 and L2 regularisation (based on your implementation).
-
 \begin{table*}[t]
     \centering
     \begin{tabular}{cc|ccc}
