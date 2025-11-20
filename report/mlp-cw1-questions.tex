@@ -37,16 +37,10 @@ then hits a limit very quickly, while validation error’s slope turns from nega
 %% Question 2:
 %    Question 2 - Present your network width experiment results by using the relevant figure and table}
 \newcommand{\questionTwo} {
-\youranswer{the model with 128 hidden units overfits. This can be seen clearly in Figure 2a, as it's validation error increases
-consistently from epoch 10 onwards. The model with 64 units, begins to slightly overfit from epochs 25 onwards. Whereas
+\youranswer{the model with 128 hidden units overfits. This can be seen clearly in Figure 2a, as its validation error increases
+consistently from epoch 10 onwards. The model, with 64 units, begins to slightly overfit from epochs 25 onwards. Whereas
 width 32 doesn't display obvious signs of overfitting, except that it's gneralisation gap increases very slightly over
 the epochs.
-%the best validation accuracy occurs at with
-%Using Figure 2a–b and Table 1, the best validation accuracy occurs at width __ with val. acc. ____.
-%Training/validation errors at this width are ____/____, yielding a generalisation gap of ____.
-%Models with widths __ and __ show signs of overfitting (gap increases by ____ from epoch __ to __),
-%whereas width __ maintains a smaller gap of ____. Any unexpected trend is that ____;
-%otherwise results are consistent across runs/epochs.
 }
 }
 
@@ -58,9 +52,22 @@ the epochs.
 \newcommand{\questionThree} {
 \youranswer{For the parameters we have fixed, increasing the width from size 32 to 64 increases the validation accuracy
 and decreases the validation loss. However, increasing the width further from size 64 to 128 decreases the validation
-accuracy and increases the validation loss. Therefore, our model which overfits the least is the width size 64. This
-observation is supported by literature, where if the model's width is too small it's model capacity cannot effectively
-model the signal of the data, and if it's width is too large it's capacity is too large and begins to overfit
+accuracy and increases the validation loss. The best validation accuracy is achieved at width 64 (66.6\%), whilst
+the model that overfit the least was width 32 as it has the smalles generalisation gap of 0.154. This suggests that
+as width increases and thus model capacity increases overfitting increases. This is supported by the general literature
+that although increase capacity allows for more complex patterns to be model and can improve validationa accuracy. It
+has the potential negative consequence of increasing overfitting.
+
+with smallest generalisation gap (thus least overfit) is achieved by width 32.
+
+the wi
+width 32 overfits the least (smallest generalisation gap).
+
+
+Therefore, our model overfits the least with a width of 64. This
+observation is supported by Goodfellow et al. \cite{goodfellow2013maxout}
+literature, where if the model's width is too small, its model capacity cannot effectively
+model the signal of the data, and if its width is too large its capacity is too large and begins to overfit
 the data's noise.
 
 This suggests that there is a sweet spot for the width. This is backed up
@@ -111,19 +118,27 @@ wrapping our loss function like the equation below:
 \[
 L_{\text{total}}
 = L_{\text{data}}
-+ \lambda_{1}\|w\|_{1}
-+ \lambda_{2}\|w\|_{2}^{2},
++ \lambda \left[
+    \alpha \, \|w\|_{1}
+    + (1 - \alpha)\, \|w\|_{2}^{2}
+\right].
 \]
 
 \begin{itemize}
-    \item \( L_{\text{total}} \): The total loss the optimiser is minimising.
-    \item \( L_{\text{data}} \): The loss produced from the data (e.g.\ cross-entropy or MSE).
-    \item \( w \): Vector of the model weights.
-    \item \( \|w\|_{1} \): L1 term, promoting sparsity.
-    \item \( \|w\|_{2}^{2} \): L2 term, encourages smoother weights.
-    \item \( \lambda_{1} \): Strength of the L1 regularisation term.
-    \item \( \lambda_{2} \): Strength of the L2 regularisation term.
+    \item \(L_{\text{total}}\): The complete loss the optimiser seeks to minimise.
+    \item \(L_{\text{data}}\): The data-driven loss term (e.g.\ cross-entropy or MSE).
+    \item \(w\): The vector of model parameters being regularised.
+    \item \(\|w\|_{1}\): L1 penalty, encouraging sparsity by pushing weights towards zero.
+    \item \(\|w\|_{2}^{2}\): L2 penalty, encouraging smoother and smaller weights.
+    \item \(\lambda\): The overall regularisation strength that scales the combined penalty.
+    \item \(\alpha \in [0,1]\): Balancing coefficient controlling the mix of L1 and L2.
+        \begin{itemize}
+            \item \(\alpha = 1\): Pure L1 regularisation.
+            \item \(\alpha = 0\): Pure L2 regularisation.
+        \end{itemize}
+    \item \(1 - \alpha\): Complementary weight ensuring the two penalties sum cleanly.
 \end{itemize}
+
 
 
 This approach was used by (Cite here).
@@ -174,21 +189,20 @@ whilst L1 provides the ability to eliminate truly irrelevant weights that L2 may
 \newcommand{\questionSeven} {
 \youranswer{
 Due to limited experimental budget of four runs, we focused on the interaction between L1 and L2 rather than
-just finding a single “best” setting. From our earlier tests, both L1 and L2 have useful ranges around 1e-13–1e-9,
+just finding a single “best” setting. From our earlier tests, both L1 and L2 have useful ranges around 5e-4-1e-3,
 with performance peaking near 1e-11 and degrading when too large.
 Guided by that, we probed two balanced points and two asymmetric points to test whether gains are driven primarily by one term or if a complementary effect emerges.
 
     Specifically, we ran:
     \begin{itemize}
-        \item Balanced small: \(\lambda_1=1\text{e-}11,\ \lambda_2=1\text{e-}11\) — tests a minimal joint penalty near each method’s individual sweet spot.
-        \item Balanced moderate: \(\lambda_1=1\text{e-}09,\ \lambda_2=1\text{e-}09\) — tests whether increasing both together maintains or improves generalisation.
-        \item Stronger L1: \(\lambda_1=1\text{e-}09,\ \lambda_2=1\text{e-}11\) — tests if L1 drives most of the benefit with only a small L2 for smoothing.
-        \item Stronger L2: \(\lambda_1=1\text{e-}11,\ \lambda_2=1\text{e-}09\) — tests if additional L2 helps when L1 is kept small.
+        \item Balanced small: \(\lambda_1=5\text{e-}4,\ \lambda_2=5\text{e-}4\) — tests a minimal joint penalty near each method’s individual sweet spot.
+        \item Balanced moderate: \(\lambda_1=1\text{e-}09,\ \lambda_2=5\text{e-}3\) — tests whether increasing both together maintains or improves generalisation.
+        \item Stronger L1: \(\lambda_1=5\text{e-}3,\ \lambda_2=5\text{e-}4\) — tests if L1 drives most of the benefit with only a small L2 for smoothing.
+        \item Stronger L2: \(\lambda_1=5\text{e-}4,\ \lambda_2=5\text{e-}3\) — tests if additional L2 helps when L1 is kept small.
     \end{itemize}
 
     This set stays within the four-run budget while answering a clearer question: do we see synergy between L1 and L2, or does one term dominate? Using balanced vs asymmetric pairs lets us attribute any improvement to either interaction effects or to a single regulariser, and the chosen magnitudes reflect the effective region indicated by our prior results.
 
-%    With a 4-run budget, I target whether L1–L2 interactions help beyond each alone. Based on prior singles (best L1 at __, best L2 at __), I propose: (1) balanced small \(\lambda_1=__,\lambda_2=__\); (2) balanced moderate \(\lambda_1=__,\lambda_2=__\); (3) stronger L1 \(\lambda_1=__,\lambda_2=__\); (4) stronger L2 \(\lambda_1=__,\lambda_2=__\). This probes synergy vs dominance. The question answered is “Do small L2 terms stabilise sparse L1 solutions (or vice versa)?” and this design is justified by __ (evidence from Table 3/Figure 4 and literature __).}
 }
 }
 
@@ -196,29 +210,30 @@ Guided by that, we probed two balanced points and two asymmetric points to test 
 %% Question 8:
 \newcommand{\questionEight} {
 \youranswer{All the regularisation methods help to reduce overfitting to varying degrees. However, we can see that for
-method there is a point that once cross degrades performace significiantly. From our results, we can see that \_ with a
-parameters value of \_ provides the greatest validation accuracy of \_. Additionally, we can see the method that has
-overfit the least is \_, with a generalisation gap of \_ - \_ = \_. Comparing these methods to the baseline and soft
-labelled baseline we can conclude that \_. Comparing L1 and L2 regularisation, we can conclude for the parameters tested
-\_ is a better regularisation method for accuracy and \_ is the least overfit regularisation method. Overall, we can
-conclude that overfitting is being tackled by \_. Furthermore, we can conclude that ther \_, between validation accuracy
-and generalisation gap, this suggests that \_. Overall, our best performing model is \_. (Citation about this)
-
-
-
-
-From a gen
-as it provides greatest validation accuracy and lowest validation
-
-For each regularisation
- method, we can see that beyond a point increasing it's parameter size can hamper
-
-%    Setup: optimiser __, lr __, batch size __, epochs __, architecture __, and L1/L2 ranges __/__.
-%Results (Table 4, Figure 5): best combined model is \(\lambda_1=__,\lambda_2=__\) with val. acc __ and gap __.
-%Compared to baseline (val. acc __, gap __) and single-regularisers (best L1: __ at __; best L2: __ at __),
-%the combo ____ in accuracy and ____ in gap. Overfitting is (reduced/increased/unchanged) for configurations __
-%(gap change __). I selected the best combined model (__) for further testing and obtained test accuracy __ with gap __,
-%consistent with __.
+all methods, there is a point that once crossed degrades performace significiantly. From our results, we can see that
+Dropout with an inclusion rate of 0.97 provides the greatest validation accuracy of 84.9\%. Additionally, we can see
+the method that has overfit the least is the model using L1 parameter values of 5e-2 and 5e-3,
+resulting in a generalisation gap of 0. However, this statement is meaningless as the model has a validation accuracy of 2\% -
+which is equivalent to random chance (1/47 ~ 0.0213). If, however, we exclude all models with validation accuracy below
+70\% the least overfit model remains L1 regularisation but at a parameter of 5e-4, with a generalisation gap of
+0.824 - 0.810 = 0.014. This suggests that the smallest amount of sparsity may help reduce generalisation gap through
+means of zeroing out unimportant features. Comparing these methods to our baselines, we can conclude that regularisation
+methods can improve accuracy and reduce error so long as reasonable parameters are used.
+The only outlier which failed to improve on the baseline model's validation accuracy across all
+the parameters tested was L1 regularsation. Our soft label baseline of 0.1 reduces validation accuracy but has an
+improved generalisation gap at 0.156 compared to the baselines 0.242. This suggests that soft labels do reduce
+overfitting but can hamper accuracy. Comparing L1 and L2 regularisation, we can conclude that L2 is superior to L1 for parameters
+\gt 1e-3 resulting high validation accuracy and lower error rates. L2 is a better regularisation method for accuracy,
+however, as previously mentioned the smallest L1 parameters presents the best generalisation gap whilst maintain
+reasonable accuracy. Overall, we can conclude that overfitting (in terms of generalisation gap) is reduced
+across all regularisation methods and parameters tested. Our best performing model is when Dropout is employed
+with a parameter value of 0.85. This could suggest that our overfitting and lack of accuracy is due to an overeliance
+on certain units over others. This conclusion is further supported by the fact that second place is held by L2
+regularisation which leads to the smoothing of weights, which results in a spreading of reliance across hidden units.
+This conclusion is supported by prior work showing that dropout can be interpreted
+as an adaptive form of L2 regularisation, and that both methods act to limit
+co-adaptation and excessive weight growth while improving generalisation.
+\cite{srivastava2014dropout,wager2013dropout,phaisangittisagul2016regularization,cavazza2018dropout}.
 }
 }
 
@@ -243,7 +258,34 @@ throughout the network, enabling learning.
 
 %% Question 10:
 \newcommand{\questionTen} {
-\youranswer{Overall we can conclude that \_. Our results are generally supported by the surrounding literature, \_.
+\youranswer{
+Overall, the experiments show that model capacity and regularisation strongly influence generalisation.
+Increasing width or depth improves accuracy only up to a point; beyond that, extra capacity widens the generalisation
+gap, matching the expected capacity–overfitting relationship in the literature. Among the regularisation methods,
+Dropout was the most effective: an inclusion rate of 0.85 achieved the highest validation accuracy and the smallest gap
+among the highest-performing models (\gt 0.8). L2 regularisation also reliably reduced overfitting, whereas L1 only
+helped reduce the generalisation gap at very small magnitudes and caused severe underfitting when too strong—consistent
+with its tendency to eliminate useful weights.
+
+After reviewing recent regularisation techniques, the author identified Sharpness-Aware Minimisation (SAM)
+\cite{foret2021sharpness} as a particularly promising approach. In future work, we would like to evaluate it's
+effectiveness in our setting. It works at the optimiser level instead of the loss function aim to select weights
+away from sharp regions.
+    seek to reproduce SAM and evaluate its effectiveness in our setting, where we …
+
+
+
+
+
+
+
+
+Some interesting research
+For fututer work we plan to emulate \cite{loshchilov2019decoupled} where they decouple L2 from the loss function.
+    As it has a tend
+and apply it as a seperate step on it's own
+
+Overall we can conclude that \_. Our results are generally supported by the surrounding literature, \_.
 however we. We found that (L1/L2 or dropout) \_ helped effectively with overfitting, whilst \_ was less so.
 In the future we are intersted in testing \_ to improve regularisation, as literature (cite here) has suggested that
 this is an effective regulariser, especially when \_.
@@ -402,9 +444,9 @@ model has, the more likely it is to overfit.
     \toprule
         \# Hidden Units & Val. Acc. & Train Error & Val. Error\\
     \midrule
-    32   &   0.583   &   1.633   &   1.787   \\
-    64   &   0.666   &   1.087   &   1.365   \\
-    128   &   0.604   &   1.172   &   1.721   \\
+    32   &   0.583   &   1.633   &   1.787   \\ %0.154
+    64   &   0.666   &   1.087   &   1.365   \\ %0.278
+    128   &   0.604   &   1.172   &   1.721   \\ %0.549
     \bottomrule
     \end{tabular}
     \caption{Validation accuracy (\%) and training/validation error (in terms of cross-entropy error) for varying network widths on the EMNIST dataset.}
@@ -439,7 +481,6 @@ model has, the more likely it is to overfit.
 \newcommand{\questionTableThree} {
 \youranswer{
 %Question Table 3 - Fill in Table 3 with the results from your experiments for the missing hyperparameter values for each of L1 regularisation, L2 regularisation, Dropout and label smoothing (use the values shown on the table).
-%
 \begin{table*}[t]
     \centering
     \begin{tabular}{c|c|ccc}
@@ -452,22 +493,22 @@ model has, the more likely it is to overfit.
         \multirow{4}*{Dropout}
                 &    0.6   &   0.799   &   1.472   &   1.507   \\
                 &    0.7   &   0.832   &   0.902   &   0.947   \\
-                &    0.85   &   0.851   &   0.414   &   0.497   \\
+                &    \textbf{0.85}   &  \textbf{0.851}  &   \textbf{0.414}   &   \textbf{0.497}   \\
                 &    0.97   &   0.849   &   0.332   &   0.509   \\
     \midrule
-        \multirow{4}*{L1 penalty}
-                &    0.0005   &   0.763   &   0.810   &   0.824   \\
-                &    0.001   &   0.701   &   1.064   &   1.084   \\
-                &    0.005   &   0.020   &   3.850   &   3.850   \\
-                &    0.05   &   0.020   &   3.850   &   3.850   \\
+        \multirow{4}*{L1 penalty}% 5e-4, 1e-3, 5e-3, 5e-2
+                &    \emph{5e-4}   &   \emph{0.763}   &   \emph{0.810}   &   \emph{0.824}   \\
+                &    1e-3   &   0.701   &   1.064   &   1.084   \\
+                &    5e-3   &   0.020   &   3.850   &   3.850   \\
+                &    5e-2   &   0.020   &   3.850   &   3.850   \\
     \midrule
         \multirow{4}*{L2 penalty}  
-                &    0.0005   &   0.748   &   0.823   &   0.949   \\
-                &    0.001   &   0.842   &   0.451   &   0.539   \\
-                &    0.005   &   0.772   &   0.833   &   0.852   \\
-                &    0.05   &   0.332   &   2.567   &   2.568   \\
+                &    5e-4   &   0.748   &   0.823   &   0.949   \\
+                &    \emph{1e-3}   &   \emph{0.842}   &   \emph{0.451}   &   \emph{0.539}   \\
+                &    5e-3   &   0.772   &   0.833   &   0.852   \\
+                &    5e-2   &   0.332   &   2.567   &   2.568   \\
     \midrule
-            Label smoothing & 0.747   &   1.352   &   1.508   \\
+            Label smoothing & 0.1 & 0.747   &   1.352   &   1.508   \\
     \bottomrule
     \end{tabular}
     \caption{Results of all hyperparameter search experiments. \emph{italics} indicate the best results per series (Dropout, L1 Regularisation, L2 Regularisation, Label smoothing) and \textbf{bold} indicates the best overall.}
@@ -488,10 +529,10 @@ Question Table 4 - Add a table with the results from your 4 experiments (by whic
     \toprule
     \ L1 Coefficient & L2 Coefficient & Val. Acc. & Train Error & Val. Error \\
     \midrule
-    1e-11       & 1e-11       &   0.747   &  0.828 &   0.845   \\
-    1e-11       & 1e-09       &   0.744   &  0.847 &   0.866   \\
-    1e-09       & 1e-11       &   0.750   &  0.823 &   0.836   \\
-    1e-09       & 1e-09       &   0.751   &  0.794 &   0.818   \\
+    5e-4   &   5e-4   &   0.772   &   0.775   &   0.781   \\
+    5e-4   &   1e-3   &   0.759   &   0.883   &   0.889   \\
+    1e-3   &   5e-4   &   0.690   &   1.135   &   1.154   \\
+    1e-3   &   1e-3   &   0.664   &   1.287   &   1.305   \\
     \bottomrule
     \end{tabular}
 \end{table*}
